@@ -3,1168 +3,462 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GAUCHA — Marcas con carácter</title>
-  <meta name="description" content="Branding estratégico para negocios que no quieren parecer una más." />
-
+  <title>TU MARCA TIENE QUE TENER CARÁCTER — Gaucha</title>
+  <meta name="description" content="Branding estratégico para negocios que no quieren parecer una más. Marcas con carácter, con onda y con criterio." />
   <style>
-    /* ===========================
-       TOKENS
-    =========================== */
     :root {
       --black:  #0D0D0D;
       --white:  #F8F8F4;
       --accent: #eaf261;
-      --gray:   #888888;
-      --gray-lt:#D8D8D4;
+      --gray:   #888;
+      --gray-lt:#DDDDD8;
       --font: 'Helvetica Neue', Helvetica, Arial, sans-serif;
       --ease: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-back: cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-
-    /* ===========================
-       RESET
-    =========================== */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-    body {
-      background: var(--white);
-      color: var(--black);
-      font-family: var(--font);
-      overflow-x: hidden;
-      cursor: none;
-    }
+    body { background: var(--white); color: var(--black); font-family: var(--font); overflow-x: hidden; cursor: none; }
     a { color: inherit; text-decoration: none; cursor: none; }
     img { display: block; max-width: 100%; }
     button { cursor: none; font-family: var(--font); }
     ::selection { background: var(--accent); color: var(--black); }
 
-    /* ===========================
-       CUSTOM CURSOR
-    =========================== */
+    /* ── CURSOR ── */
     .cursor {
-      position: fixed;
-      top: 0; left: 0;
+      position: fixed; top: 0; left: 0;
       width: 10px; height: 10px;
       background: var(--accent);
       border-radius: 50%;
       pointer-events: none;
       z-index: 9999;
-      transform: translate(-50%, -50%);
-      transition: width 0.25s var(--ease), height 0.25s var(--ease), opacity 0.2s;
+      transform: translate(-50%,-50%);
+      transition: width .3s var(--ease), height .3s var(--ease), opacity .2s, background .2s;
       mix-blend-mode: difference;
     }
-    .cursor--grow {
-      width: 48px;
-      height: 48px;
-    }
-    .cursor--hidden { opacity: 0; }
+    .cursor.grow { width: 52px; height: 52px; }
+    .cursor.hidden { opacity: 0; }
+    @media(max-width:600px){ .cursor { display:none; } }
 
-    /* ===========================
-       NAV
-    =========================== */
+    /* ── FLOATING SYMBOLS ── */
+    .floaters {
+      position: fixed; inset: 0;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+    .floater {
+      position: absolute;
+      font-size: clamp(1rem, 2vw, 1.5rem);
+      color: var(--accent);
+      opacity: 0;
+      animation: floatUp 12s linear infinite;
+      user-select: none;
+    }
+    @keyframes floatUp {
+      0%   { opacity: 0; transform: translateY(0) rotate(0deg); }
+      10%  { opacity: 0.6; }
+      90%  { opacity: 0.3; }
+      100% { opacity: 0; transform: translateY(-100vh) rotate(360deg); }
+    }
+
+    /* ── NAV ── */
     .nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
+      position: fixed; top: 0; left: 0; right: 0;
       z-index: 100;
-      padding: 1.5rem clamp(1.5rem, 5vw, 4rem);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: background 0.3s, backdrop-filter 0.3s;
+      padding: 1.25rem clamp(1.5rem,5vw,4rem);
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background .3s, backdrop-filter .3s, border-color .3s;
+      border-bottom: 1px solid transparent;
     }
     .nav.scrolled {
-      background: rgba(248,248,244,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--gray-lt);
+      background: rgba(248,248,244,0.95);
+      backdrop-filter: blur(14px);
+      border-color: var(--gray-lt);
     }
     .nav__logo {
-      display: flex;
-      align-items: center;
+      font-size: 1.375rem; font-weight: 500;
+      letter-spacing: -0.01em; text-transform: lowercase;
+      color: var(--white); transition: color .3s;
     }
-    .nav__logo img {
-      height: 36px;
-      width: auto;
-      display: block;
-    }
-    .nav__logo-text {
-      font-size: 1.25rem;
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
-    }
-    .nav__links {
-      display: flex;
-      gap: 2.5rem;
-      list-style: none;
-    }
+    .nav__logo img { height: 30px; width: auto; filter: invert(1); transition: filter .3s; }
+    .nav__logo img.loaded { filter: invert(1); }
+    .nav.scrolled .nav__logo { color: var(--black); }
+    .nav.scrolled .nav__logo img { filter: invert(0); }
+    .nav__links { display: flex; gap: 2.5rem; list-style: none; }
     .nav__links a {
-      font-size: 0.8125rem;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      position: relative;
+      font-size: .8125rem; font-weight: 500; letter-spacing: .06em;
+      text-transform: uppercase; color: rgba(255,255,255,.7);
+      position: relative; transition: color .2s;
     }
+    .nav.scrolled .nav__links a { color: var(--gray); }
     .nav__links a::after {
-      content: '';
-      position: absolute;
-      bottom: -2px; left: 0;
-      width: 0; height: 1px;
-      background: var(--black);
-      transition: width 0.3s var(--ease);
+      content: ''; position: absolute; bottom: -2px; left: 0;
+      width: 0; height: 1px; background: var(--accent);
+      transition: width .3s var(--ease);
     }
+    .nav__links a:hover { color: var(--white) !important; }
+    .nav.scrolled .nav__links a:hover { color: var(--black) !important; }
     .nav__links a:hover::after { width: 100%; }
     .nav__cta {
-      font-size: 0.8125rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      background: var(--black);
-      color: var(--white);
-      padding: 0.65rem 1.5rem;
-      border-radius: 100px;
-      transition: background 0.2s, color 0.2s, transform 0.2s;
+      font-size: .8125rem; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; background: var(--accent); color: var(--black);
+      padding: .6rem 1.4rem; border-radius: 100px;
+      transition: transform .2s var(--ease-back), background .2s;
     }
-    .nav__cta:hover {
-      background: var(--accent);
-      color: var(--black);
-      transform: scale(1.04);
-    }
-    .nav__hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      background: none;
-      border: none;
-      padding: 4px;
-    }
-    .nav__hamburger span {
-      display: block;
-      width: 22px; height: 1.5px;
-      background: var(--black);
-      transition: all 0.25s;
-    }
+    .nav__cta:hover { transform: scale(1.06); background: #f0f970; }
+    .nav__hamburger { display: none; flex-direction: column; gap: 5px; background: none; border: none; padding: 4px; }
+    .nav__hamburger span { display: block; width: 22px; height: 1.5px; background: var(--white); transition: background .3s; }
+    .nav.scrolled .nav__hamburger span { background: var(--black); }
 
-    /* ===========================
-       HERO
-    =========================== */
+    /* ── HERO ── */
     .hero {
-      min-height: 100svh;
-      background: var(--black);
-      color: var(--white);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      padding: 7rem clamp(1.5rem, 5vw, 4rem) 3rem;
-      position: relative;
-      overflow: hidden;
+      min-height: 100svh; background: var(--black); color: var(--white);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 7rem clamp(1.5rem,5vw,4rem) 3rem;
+      position: relative; overflow: hidden;
     }
-    .hero__bg-word {
+    .hero__grain {
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+      background-size: 200px; opacity: .4; pointer-events: none;
+    }
+    .hero__symbol {
       position: absolute;
-      bottom: -0.08em; right: -0.02em;
-      font-size: clamp(12rem, 30vw, 26rem);
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: -0.04em;
-      color: rgba(255,255,255,0.04);
-      user-select: none;
-      pointer-events: none;
-      text-transform: uppercase;
-    }
-    .hero__tag {
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
       color: var(--accent);
+      font-size: clamp(4rem,10vw,8rem);
+      opacity: .06;
+      user-select: none; pointer-events: none;
+      transition: transform .1s linear;
+    }
+    .hero__symbol--tl { top: 12%; left: 5%; }
+    .hero__symbol--br { bottom: 15%; right: 6%; font-size: clamp(2rem,5vw,4rem); opacity: .1; }
+    .hero__tag {
+      font-size: .75rem; font-weight: 600; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--accent);
+      display: flex; align-items: center; gap: .75rem;
       margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
     }
-    .hero__tag::before {
-      content: '';
-      display: block;
-      width: 28px; height: 1px;
-      background: var(--accent);
-    }
+    .hero__tag::before { content: ''; display: block; width: 28px; height: 1px; background: var(--accent); }
     .hero__headline {
-      font-size: clamp(4rem, 12vw, 12rem);
-      font-weight: 900;
-      line-height: 0.9;
-      letter-spacing: -0.03em;
-      text-transform: uppercase;
-      margin-bottom: clamp(2rem, 4vh, 3.5rem);
+      font-size: clamp(3rem,11vw,11rem); font-weight: 900;
+      line-height: .9; letter-spacing: -.03em; text-transform: uppercase;
+      margin-bottom: clamp(2rem,4vh,3.5rem);
+      position: relative; z-index: 1;
     }
-    .hero__headline em {
-      font-style: italic;
-      font-weight: 300;
+    .hero__headline .word { display: inline-block; overflow: hidden; }
+    .hero__headline .word-inner {
+      display: inline-block;
+      transform: translateY(110%);
+      transition: transform .9s var(--ease);
     }
+    .hero__headline .word-inner.in { transform: translateY(0); }
+    .hero__headline em { font-style: italic; font-weight: 300; color: var(--accent); }
     .hero__bottom {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 2rem;
-      flex-wrap: wrap;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      padding-top: 2rem;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      gap: 2rem; flex-wrap: wrap;
+      border-top: 1px solid rgba(255,255,255,.1); padding-top: 2rem;
+      position: relative; z-index: 1;
     }
     .hero__sub {
-      font-size: clamp(1rem, 1.6vw, 1.2rem);
-      font-weight: 300;
-      line-height: 1.6;
-      color: rgba(255,255,255,0.6);
-      max-width: 40ch;
+      font-size: clamp(1rem,1.6vw,1.2rem); font-weight: 300;
+      line-height: 1.6; color: rgba(255,255,255,.55); max-width: 40ch;
     }
-    .hero__actions {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      flex-wrap: wrap;
+    .hero__actions { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+    .hero__scroll-hint {
+      position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: .5rem;
+      color: rgba(255,255,255,.3); font-size: .625rem; letter-spacing: .2em;
+      text-transform: uppercase; z-index: 1;
+      animation: bounce 2s ease-in-out infinite;
     }
+    @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+    .hero__scroll-hint svg { width: 20px; height: 20px; }
 
-    /* ===========================
-       BUTTONS
-    =========================== */
+    /* ── BTN ── */
     .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-family: var(--font);
-      font-size: 0.8125rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 0.9rem 1.8rem;
-      border-radius: 100px;
-      border: none;
-      transition: all 0.25s var(--ease);
+      display: inline-flex; align-items: center; gap: .5rem;
+      font-family: var(--font); font-size: .8125rem; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      padding: .9rem 1.8rem; border-radius: 100px; border: none;
+      transition: all .25s var(--ease);
     }
-    .btn--accent {
-      background: var(--accent);
-      color: var(--black);
-    }
-    .btn--accent:hover { transform: scale(1.05); background: #f0f970; }
-    .btn--outline-white {
-      background: transparent;
-      color: var(--white);
-      border: 1.5px solid rgba(255,255,255,0.3);
-    }
-    .btn--outline-white:hover { border-color: var(--white); }
-    .btn--outline-black {
-      background: transparent;
-      color: var(--black);
-      border: 1.5px solid var(--black);
-    }
-    .btn--outline-black:hover { background: var(--black); color: var(--white); }
-    .btn svg { width: 14px; height: 14px; transition: transform 0.25s; }
-    .btn:hover svg { transform: translateX(3px); }
+    .btn--accent { background: var(--accent); color: var(--black); }
+    .btn--accent:hover { transform: scale(1.05) translateY(-2px); background: #f0f970; box-shadow: 0 8px 24px rgba(234,242,97,.35); }
+    .btn--wh { background: transparent; color: var(--white); border: 1.5px solid rgba(255,255,255,.3); }
+    .btn--wh:hover { border-color: var(--white); }
+    .btn--bk { background: var(--black); color: var(--white); }
+    .btn--bk:hover { background: #222; transform: translateY(-2px); }
+    .btn--outline { background: transparent; color: var(--black); border: 1.5px solid var(--black); }
+    .btn--outline:hover { background: var(--black); color: var(--white); }
+    .btn svg { width: 14px; height: 14px; transition: transform .25s; }
+    .btn:hover svg { transform: translateX(4px); }
 
-    /* ===========================
-       MARQUEE
-    =========================== */
-    .marquee {
-      background: var(--accent);
-      overflow: hidden;
-      padding: 0.75rem 0;
-      border-top: 1.5px solid var(--black);
-      border-bottom: 1.5px solid var(--black);
-    }
-    .marquee__track {
-      display: flex;
-      width: max-content;
-      animation: marqueeAnim 20s linear infinite;
-    }
-    @keyframes marqueeAnim {
-      0%   { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
+    /* ── MARQUEE ── */
+    .marquee { background: var(--accent); overflow: hidden; padding: .7rem 0; border-top: 1.5px solid var(--black); border-bottom: 1.5px solid var(--black); }
+    .marquee__track { display: flex; width: max-content; animation: mq 18s linear infinite; }
+    @keyframes mq { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
     .marquee__item {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      padding: 0 1.5rem;
-      white-space: nowrap;
-      font-size: 0.75rem;
-      font-weight: 800;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--black);
+      display: flex; align-items: center; gap: 1.25rem; padding: 0 1.25rem;
+      white-space: nowrap; font-size: .75rem; font-weight: 800;
+      letter-spacing: .18em; text-transform: uppercase; color: var(--black);
     }
-    .marquee__dot {
-      width: 5px; height: 5px;
-      background: var(--black);
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
+    .marquee__sym { font-size: 1rem; }
 
-    /* ===========================
-       SECTION UTILITY
-    =========================== */
-    .section {
-      padding: clamp(5rem, 12vh, 9rem) clamp(1.5rem, 5vw, 4rem);
+    /* ── SECTION UTILS ── */
+    .section { padding: clamp(5rem,12vh,9rem) clamp(1.5rem,5vw,4rem); }
+    .section--black { background: var(--black); color: var(--white); }
+    .section--accent { background: var(--accent); color: var(--black); }
+    .sec-label {
+      font-size: .6875rem; font-weight: 700; letter-spacing: .2em;
+      text-transform: uppercase; color: var(--gray);
+      display: flex; align-items: center; gap: .75rem; margin-bottom: 1.5rem;
     }
-    .section-label {
-      font-size: 0.6875rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--gray);
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
+    .sec-label--w { color: rgba(255,255,255,.35); }
+    .sec-label--b { color: rgba(0,0,0,.4); }
+    .sec-label::after { content: ''; display: block; width: 24px; height: 1px; background: currentColor; }
+    .headline {
+      font-size: clamp(2.5rem,6vw,5.5rem); font-weight: 900;
+      line-height: .95; letter-spacing: -.03em; text-transform: uppercase;
     }
-    .section-label::after {
-      content: '';
-      display: block;
-      width: 24px; height: 1px;
-      background: var(--gray);
-    }
-    .section-headline {
-      font-size: clamp(2.5rem, 6vw, 5.5rem);
-      font-weight: 900;
-      line-height: 0.95;
-      letter-spacing: -0.03em;
-      text-transform: uppercase;
-    }
-    .section-headline em { font-style: italic; font-weight: 300; }
+    .headline em { font-style: italic; font-weight: 300; }
 
-    /* Reveal */
-    .reveal {
-      opacity: 0;
-      transform: translateY(3rem);
-      transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
-    }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-    .reveal-d1 { transition-delay: 0.1s; }
-    .reveal-d2 { transition-delay: 0.2s; }
-    .reveal-d3 { transition-delay: 0.35s; }
-    .reveal-d4 { transition-delay: 0.5s; }
+    /* ── REVEAL VARIANTS ── */
+    .rv { opacity: 0; transition: opacity .8s var(--ease), transform .8s var(--ease); }
+    .rv--up    { transform: translateY(3rem); }
+    .rv--left  { transform: translateX(-3rem); }
+    .rv--right { transform: translateX(3rem); }
+    .rv--scale { transform: scale(.92); }
+    .rv--rot   { transform: rotate(-4deg) translateY(2rem); }
+    .rv.in { opacity: 1; transform: none; }
+    .d1{transition-delay:.1s} .d2{transition-delay:.2s}
+    .d3{transition-delay:.35s} .d4{transition-delay:.5s}
+    .d5{transition-delay:.65s} .d6{transition-delay:.8s}
 
-    /* ===========================
-       SOBRE GAUCHA (mini about)
-    =========================== */
-    .about {
-      background: var(--white);
-    }
-    .about__grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(3rem, 7vw, 8rem);
-      align-items: center;
-    }
-    .about__left {}
-    .about__body {
-      font-size: clamp(1.1rem, 2vw, 1.5rem);
-      font-weight: 300;
-      line-height: 1.55;
-      margin-top: 2rem;
-    }
+    /* ── ABOUT ── */
+    .about__grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem,7vw,8rem); align-items: center; }
+    .about__body { font-size: clamp(1.1rem,2vw,1.4rem); font-weight: 300; line-height: 1.6; margin-top: 2rem; }
     .about__body strong { font-weight: 700; }
-    .about__img {
-      aspect-ratio: 4/5;
-      background: var(--black);
-      border-radius: 4px;
-      overflow: hidden;
-      position: relative;
+    .about__img { aspect-ratio: 4/5; background: #111; border-radius: 6px; overflow: hidden; position: relative; }
+    .about__img img { width:100%; height:100%; object-fit:cover; }
+    .about__img-ph {
+      position: absolute; inset: 0; display: flex; align-items: center;
+      justify-content: center; flex-direction: column; gap: 1rem;
+      color: rgba(255,255,255,.12); font-size: .75rem; font-weight: 700;
+      letter-spacing: .15em; text-transform: uppercase; text-align: center;
     }
-    .about__img img {
-      width: 100%; height: 100%;
-      object-fit: cover;
+    .about__img-ph svg { width: 48px; height: 48px; }
+    .about__badges {
+      display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 2.5rem;
     }
-    .about__img-placeholder {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 1rem;
-      color: rgba(255,255,255,0.2);
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      text-align: center;
+    .badge {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-size: .75rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; padding: .45rem 1rem;
+      border: 1.5px solid var(--black); border-radius: 100px;
+      transition: background .2s, color .2s;
     }
-    .about__img-placeholder svg {
-      width: 48px; height: 48px;
-      opacity: 0.15;
-    }
+    .badge:hover { background: var(--black); color: var(--white); }
+    .badge .sym { color: var(--accent); }
 
-    /* ===========================
-       PROYECTOS / CAROUSEL
-    =========================== */
-    .projects {
-      background: var(--black);
-      color: var(--white);
-      padding: clamp(5rem, 12vh, 9rem) 0;
-    }
+    /* ── PROYECTOS ── */
+    .projects { background: var(--black); color: var(--white); padding: clamp(5rem,12vh,9rem) 0; }
     .projects__header {
-      padding: 0 clamp(1.5rem, 5vw, 4rem);
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 2rem;
-      margin-bottom: clamp(2.5rem, 5vh, 4rem);
-      flex-wrap: wrap;
+      padding: 0 clamp(1.5rem,5vw,4rem);
+      display: flex; align-items: flex-end; justify-content: space-between;
+      gap: 2rem; margin-bottom: clamp(2.5rem,5vh,4rem); flex-wrap: wrap;
     }
-    .projects__headline { color: var(--white); }
-    .projects__nav {
-      display: flex;
-      gap: 0.75rem;
-    }
+    .proj-nav { display: flex; gap: .75rem; }
     .proj-nav-btn {
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      border: 1.5px solid rgba(255,255,255,0.25);
-      background: transparent;
-      color: var(--white);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.25s;
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,.2);
+      background: transparent; color: var(--white);
+      display: flex; align-items: center; justify-content: center;
+      transition: all .25s var(--ease-back);
     }
-    .proj-nav-btn:hover {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: var(--black);
-    }
+    .proj-nav-btn:hover { background: var(--accent); border-color: var(--accent); color: var(--black); transform: scale(1.1); }
     .proj-nav-btn svg { width: 18px; height: 18px; }
-
     .carousel {
-      display: flex;
-      gap: 1.25rem;
-      padding: 0 clamp(1.5rem, 5vw, 4rem);
-      overflow-x: auto;
-      scroll-snap-type: x mandatory;
+      display: flex; gap: 1.25rem; padding: 0 clamp(1.5rem,5vw,4rem);
+      overflow-x: auto; scroll-snap-type: x mandatory;
       scrollbar-width: none;
-      -ms-overflow-style: none;
     }
     .carousel::-webkit-scrollbar { display: none; }
-
     .proj-card {
-      flex: 0 0 clamp(280px, 38vw, 520px);
-      scroll-snap-align: start;
-      position: relative;
-      border-radius: 6px;
-      overflow: hidden;
-      aspect-ratio: 3/4;
-      background: #161616;
-      transition: transform 0.4s var(--ease);
+      flex: 0 0 clamp(280px,38vw,500px); scroll-snap-align: start;
+      position: relative; border-radius: 8px; overflow: hidden;
+      aspect-ratio: 3/4; background: #161616;
+      transition: transform .4s var(--ease);
     }
-    .proj-card:hover { transform: scale(0.98); }
-
-    /* Image placeholder pattern */
-    .proj-card__bg {
-      position: absolute;
-      inset: 0;
-      transition: transform 0.6s var(--ease);
-    }
-    .proj-card:hover .proj-card__bg { transform: scale(1.05); }
-
-    .proj-card__bg--a {
-      background: linear-gradient(160deg, #1a1a1a 0%, #111 100%);
-    }
-    .proj-card__bg--b {
-      background: linear-gradient(160deg, #141414 0%, #1c1c14 100%);
-    }
-    .proj-card__bg--c {
-      background: linear-gradient(160deg, #141418 0%, #111 100%);
-    }
-    .proj-card__bg--d {
-      background: linear-gradient(160deg, #181414 0%, #111 100%);
-    }
-    .proj-card__bg--e {
-      background: linear-gradient(160deg, #141818 0%, #111 100%);
-    }
-
-    /* Real image slot */
-    .proj-card__img {
-      position: absolute;
-      inset: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-    }
-
-    /* Decorative grid pattern */
-    .proj-card__pattern {
-      position: absolute;
-      inset: 0;
-      opacity: 0.07;
-      background-image:
-        linear-gradient(rgba(234,242,97,0.8) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(234,242,97,0.8) 1px, transparent 1px);
+    .proj-card:hover { transform: scale(.98); }
+    .proj-card__bg { position: absolute; inset: 0; transition: transform .6s var(--ease); }
+    .proj-card:hover .proj-card__bg { transform: scale(1.06); }
+    .proj-card__bg--a { background: linear-gradient(160deg,#1a1a1a,#0d0d0d); }
+    .proj-card__bg--b { background: linear-gradient(160deg,#141414,#1c1c14); }
+    .proj-card__bg--c { background: linear-gradient(160deg,#141418,#111); }
+    .proj-card__bg--d { background: linear-gradient(160deg,#181414,#111); }
+    .proj-card__bg--e { background: linear-gradient(160deg,#141818,#111); }
+    .proj-card__grid {
+      position: absolute; inset: 0; opacity: .06;
+      background-image: linear-gradient(rgba(234,242,97,.8) 1px,transparent 1px), linear-gradient(90deg,rgba(234,242,97,.8) 1px,transparent 1px);
       background-size: 40px 40px;
     }
-
-    .proj-card__overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 55%);
+    .proj-card__img { position: absolute; inset: 0; width:100%; height:100%; object-fit:cover; }
+    .proj-card__ph {
+      position: absolute; inset: 0; display: flex; align-items: center;
+      justify-content: center; flex-direction: column; gap: .75rem;
+      color: rgba(255,255,255,.08); font-size: .6875rem; font-weight: 700;
+      letter-spacing: .15em; text-transform: uppercase;
     }
-    .proj-card__placeholder {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 0.75rem;
-      color: rgba(255,255,255,0.08);
-      font-size: 0.6875rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-    }
-    .proj-card__placeholder svg { width: 40px; height: 40px; opacity: 0.5; }
-    .proj-card__content {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: clamp(1.5rem, 3vw, 2rem);
-      z-index: 1;
-    }
-    .proj-card__label {
-      font-size: 0.625rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.5rem;
-    }
-    .proj-card__title {
-      font-size: clamp(1.25rem, 2.5vw, 1.75rem);
-      font-weight: 900;
-      line-height: 1.1;
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-    }
-    .proj-card__tags {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-    .proj-tag {
-      font-size: 0.625rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 0.25rem 0.65rem;
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 100px;
-      color: rgba(255,255,255,0.55);
-    }
-
+    .proj-card__ph svg { width: 40px; height: 40px; }
+    .proj-card__overlay { position: absolute; inset: 0; background: linear-gradient(to top,rgba(0,0,0,.9) 0%,transparent 55%); }
     .proj-card__badge {
-      position: absolute;
-      top: 1.25rem; right: 1.25rem;
-      font-size: 0.5625rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      background: var(--accent);
-      color: var(--black);
-      padding: 0.3rem 0.7rem;
-      border-radius: 100px;
-      z-index: 1;
+      position: absolute; top: 1.25rem; right: 1.25rem;
+      font-size: .5625rem; font-weight: 700; letter-spacing: .18em;
+      text-transform: uppercase; background: var(--accent); color: var(--black);
+      padding: .3rem .7rem; border-radius: 100px; z-index: 1;
     }
+    .proj-card__content { position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem; z-index: 1; }
+    .proj-card__label { font-size: .625rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); margin-bottom: .5rem; }
+    .proj-card__title { font-size: clamp(1.25rem,2.5vw,1.75rem); font-weight: 900; line-height: 1.1; letter-spacing: -.02em; text-transform: uppercase; margin-bottom: .5rem; }
+    .proj-tags { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .proj-tag { font-size: .625rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; padding: .25rem .65rem; border: 1px solid rgba(255,255,255,.2); border-radius: 100px; color: rgba(255,255,255,.5); }
 
-    /* ===========================
-       SERVICIOS
-    =========================== */
-    .services {
-      background: var(--white);
+    /* ── SERVICIOS ACCORDION ── */
+    .services__intro { font-size: clamp(1rem,1.5vw,1.2rem); font-weight: 300; line-height: 1.65; color: var(--gray); max-width: 60ch; margin-top: 1.5rem; }
+    .acc { margin-top: 3rem; border-top: 1.5px solid var(--black); }
+    .acc-item { border-bottom: 1.5px solid var(--black); overflow: hidden; }
+    .acc-header {
+      display: flex; align-items: center; gap: 1.5rem;
+      padding: 1.75rem 0; cursor: none; user-select: none;
+      transition: color .2s;
     }
-    .services__header {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(3rem, 7vw, 8rem);
-      align-items: end;
-      margin-bottom: clamp(3rem, 6vh, 5rem);
+    .acc-header:hover { color: var(--gray); }
+    .acc-num { font-size: .75rem; font-weight: 700; letter-spacing: .18em; color: var(--accent); min-width: 2rem; }
+    .acc-title { font-size: clamp(1.25rem,2.5vw,2rem); font-weight: 900; letter-spacing: -.02em; text-transform: uppercase; flex: 1; }
+    .acc-sym { font-size: 1.25rem; color: var(--gray); transition: transform .4s var(--ease), color .2s; }
+    .acc-item.open .acc-sym { transform: rotate(45deg); color: var(--accent); }
+    .acc-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height .5s var(--ease), padding .5s var(--ease);
+      padding: 0 0 0 3.5rem;
     }
-    .services__intro {
-      font-size: clamp(1rem, 1.5vw, 1.125rem);
-      line-height: 1.65;
-      color: var(--gray);
-      align-self: end;
-    }
-    .services__grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1px;
-      background: var(--gray-lt);
-      border: 1px solid var(--gray-lt);
-      margin-bottom: 4rem;
-    }
-    .svc-card {
-      background: var(--white);
-      padding: clamp(1.75rem, 3.5vw, 2.75rem);
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      transition: background 0.3s, color 0.3s;
-      position: relative;
-      overflow: hidden;
-    }
-    .svc-card::before {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0;
-      width: 0; height: 3px;
-      background: var(--accent);
-      transition: width 0.4s var(--ease);
-    }
-    .svc-card:hover::before { width: 100%; }
-    .svc-card:hover { background: var(--black); color: var(--white); }
-    .svc-card__num {
-      font-size: 0.625rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-      opacity: 0.7;
-      transition: opacity 0.3s;
-    }
-    .svc-card:hover .svc-card__num { opacity: 1; }
-    .svc-card__name {
-      font-size: clamp(1.1rem, 1.8vw, 1.375rem);
-      font-weight: 900;
-      line-height: 1.15;
-      letter-spacing: -0.01em;
-      text-transform: uppercase;
-    }
-    .svc-card__desc {
-      font-size: 0.875rem;
-      line-height: 1.6;
-      color: var(--gray);
-      transition: color 0.3s;
-    }
-    .svc-card:hover .svc-card__desc { color: rgba(255,255,255,0.55); }
+    .acc-item.open .acc-body { max-height: 600px; padding: 0 0 2rem 3.5rem; }
+    .acc-body-inner { display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: start; }
+    .acc-desc { font-size: 1rem; line-height: 1.7; color: var(--gray); font-weight: 300; max-width: 55ch; }
+    .acc-includes { list-style: none; display: flex; flex-direction: column; gap: .5rem; margin-top: 1.25rem; }
+    .acc-includes li { font-size: .875rem; color: var(--gray); display: flex; align-items: center; gap: .6rem; }
+    .acc-includes li::before { content: '✦'; color: var(--accent); font-size: .6rem; flex-shrink: 0; }
+    .acc-cta { flex-shrink: 0; align-self: center; }
 
-    /* ===========================
-       IMAGEN FULL (space for photo)
-    =========================== */
-    .fullimg {
-      background: var(--black);
-      position: relative;
-      overflow: hidden;
-    }
-    .fullimg__inner {
-      aspect-ratio: 21/9;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .fullimg img {
-      position: absolute;
-      inset: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-    }
-    .fullimg__placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      color: rgba(255,255,255,0.12);
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      position: relative;
-      z-index: 1;
-    }
-    .fullimg__placeholder svg { width: 56px; height: 56px; }
-    .fullimg__overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .fullimg__quote {
-      font-size: clamp(1.5rem, 4vw, 3.5rem);
-      font-weight: 900;
-      color: var(--white);
-      text-align: center;
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
-      line-height: 1;
-      max-width: 18ch;
-      padding: 2rem;
-    }
-    .fullimg__quote em {
-      font-style: italic;
-      font-weight: 300;
-      color: var(--accent);
-    }
+    /* ── FULL IMG ── */
+    .fullimg { position: relative; overflow: hidden; }
+    .fullimg__inner { aspect-ratio: 21/9; position: relative; display: flex; align-items: center; justify-content: center; background: var(--black); }
+    .fullimg__inner img { position: absolute; inset: 0; width:100%; height:100%; object-fit:cover; }
+    .fullimg__ph { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 1rem; color: rgba(255,255,255,.1); font-size: .75rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+    .fullimg__ph svg { width: 56px; height: 56px; }
+    .fullimg__overlay { position: absolute; inset: 0; background: rgba(0,0,0,.5); display: flex; align-items: center; justify-content: center; }
+    .fullimg__quote { font-size: clamp(1.5rem,4vw,3.5rem); font-weight: 900; color: var(--white); text-align: center; letter-spacing: -.02em; text-transform: uppercase; line-height: 1; max-width: 18ch; padding: 2rem; }
+    .fullimg__quote em { font-style: italic; font-weight: 300; color: var(--accent); }
 
-    /* ===========================
-       PAQUETES
-    =========================== */
-    .packages {
-      background: var(--white);
+    /* ── MANIFIESTO ── */
+    .manifesto { text-align: center; position: relative; overflow: hidden; }
+    .manifesto__bg-sym {
+      position: absolute; font-size: clamp(12rem,30vw,26rem);
+      color: rgba(0,0,0,.05); font-weight: 900; user-select: none;
+      pointer-events: none; line-height: 1;
     }
-    .packages__header {
-      text-align: center;
-      margin-bottom: clamp(3rem, 6vh, 5rem);
-    }
-    .packages__sub {
-      font-size: clamp(1rem, 1.5vw, 1.125rem);
-      line-height: 1.6;
-      color: var(--gray);
-      max-width: 52ch;
-      margin: 1.25rem auto 0;
-      font-weight: 300;
-    }
-    .packages__grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    .packages__grid--2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-    .pkg {
-      border: 1.5px solid var(--gray-lt);
-      border-radius: 6px;
-      padding: clamp(1.75rem, 3.5vw, 2.5rem);
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      position: relative;
-      transition: border-color 0.3s, transform 0.3s var(--ease), box-shadow 0.3s;
-    }
-    .pkg:hover {
-      border-color: var(--black);
-      transform: translateY(-6px);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.08);
-    }
-    .pkg--featured {
-      background: var(--black);
-      color: var(--white);
-      border-color: var(--black);
-    }
-    .pkg--featured:hover { border-color: var(--accent); }
-    .pkg__badge {
-      position: absolute;
-      top: -1px; right: 1.75rem;
-      background: var(--accent);
-      color: var(--black);
-      font-size: 0.5625rem;
-      font-weight: 800;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      padding: 0.3rem 0.75rem;
-      border-radius: 0 0 4px 4px;
-    }
-    .pkg__tag {
-      font-size: 0.625rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-    .pkg--featured .pkg__tag { color: var(--accent); }
-    .pkg__name {
-      font-size: clamp(1.5rem, 2.5vw, 2rem);
-      font-weight: 900;
-      line-height: 1.05;
-      letter-spacing: -0.02em;
-      text-transform: uppercase;
-    }
-    .pkg__desc {
-      font-size: 0.9375rem;
-      line-height: 1.65;
-      color: var(--gray);
-      font-weight: 300;
-    }
-    .pkg--featured .pkg__desc { color: rgba(255,255,255,0.5); }
-    .pkg__list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      flex: 1;
-    }
-    .pkg__list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.65rem;
-      font-size: 0.875rem;
-      line-height: 1.5;
-      color: var(--gray);
-    }
-    .pkg--featured .pkg__list li { color: rgba(255,255,255,0.6); }
-    .pkg__list li::before {
-      content: '—';
-      color: var(--accent);
-      font-weight: 700;
-      flex-shrink: 0;
-    }
-    .pkg__cta {
-      display: block;
-      text-align: center;
-      font-size: 0.8125rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 0.875rem 1.5rem;
-      border-radius: 100px;
-      border: 1.5px solid currentColor;
-      transition: all 0.25s;
-    }
-    .pkg:not(.pkg--featured) .pkg__cta:hover {
-      background: var(--black);
-      color: var(--white);
-      border-color: var(--black);
-    }
-    .pkg--featured .pkg__cta {
-      background: var(--accent);
-      color: var(--black);
-      border-color: var(--accent);
-    }
-    .pkg--featured .pkg__cta:hover {
-      background: #f0f970;
-      border-color: #f0f970;
-    }
-
-    /* ===========================
-       MANIFIESTO
-    =========================== */
-    .manifesto {
-      background: var(--accent);
-      padding: clamp(6rem, 14vh, 11rem) clamp(1.5rem, 5vw, 4rem);
-      text-align: center;
-    }
-    .manifesto__headline {
-      font-size: clamp(2.5rem, 7vw, 7rem);
-      font-weight: 900;
-      line-height: 0.95;
-      letter-spacing: -0.03em;
-      text-transform: uppercase;
-      color: var(--black);
-      margin-bottom: 2.5rem;
-    }
+    .manifesto__bg-sym--tl { top: -0.1em; left: -0.05em; }
+    .manifesto__bg-sym--br { bottom: -0.1em; right: -0.05em; }
+    .manifesto__headline { font-size: clamp(2.5rem,7vw,7rem); font-weight: 900; line-height: .95; letter-spacing: -.03em; text-transform: uppercase; margin-bottom: 2.5rem; position: relative; }
     .manifesto__headline em { font-style: italic; font-weight: 300; }
-    .manifesto__body {
-      font-size: clamp(1.1rem, 2vw, 1.375rem);
-      line-height: 1.65;
-      color: rgba(0,0,0,0.65);
-      max-width: 60ch;
-      margin: 0 auto 3rem;
-      font-weight: 300;
-    }
-    .manifesto__body strong { color: var(--black); font-weight: 700; }
+    .manifesto__body { font-size: clamp(1.1rem,2vw,1.375rem); line-height: 1.7; max-width: 60ch; margin: 0 auto 3rem; font-weight: 300; position: relative; }
+    .manifesto__body strong { font-weight: 700; }
 
-    /* ===========================
-       IMAGEN DOBLE
-    =========================== */
-    .dual-img {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1px;
-      background: var(--gray-lt);
-    }
-    .dual-img__item {
-      aspect-ratio: 3/4;
-      background: var(--black);
-      position: relative;
-      overflow: hidden;
-    }
-    .dual-img__item img {
-      position: absolute;
-      inset: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s var(--ease);
-    }
-    .dual-img__item:hover img { transform: scale(1.04); }
-    .dual-img__placeholder {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 0.75rem;
-      color: rgba(255,255,255,0.1);
-      font-size: 0.6875rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-    }
-    .dual-img__placeholder svg { width: 40px; height: 40px; }
-    .dual-img__caption {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      padding: 1.5rem;
-      background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-      color: var(--white);
-    }
-    .dual-img__caption h3 {
-      font-size: 1rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: -0.01em;
-    }
-    .dual-img__caption p {
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.55);
-      margin-top: 0.25rem;
-    }
+    /* ── DUAL IMG ── */
+    .dual { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--gray-lt); }
+    .dual__item { aspect-ratio: 3/4; background: var(--black); position: relative; overflow: hidden; }
+    .dual__item img { position: absolute; inset: 0; width:100%; height:100%; object-fit:cover; transition: transform .6s var(--ease); }
+    .dual__item:hover img { transform: scale(1.04); }
+    .dual__ph { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: .75rem; color: rgba(255,255,255,.1); font-size: .6875rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+    .dual__ph svg { width: 40px; height: 40px; }
+    .dual__cap { position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem; background: linear-gradient(to top,rgba(0,0,0,.75),transparent); color: var(--white); }
+    .dual__cap h3 { font-size: 1rem; font-weight: 900; text-transform: uppercase; letter-spacing: -.01em; }
+    .dual__cap p { font-size: .75rem; color: rgba(255,255,255,.5); margin-top: .25rem; }
 
-    /* ===========================
-       PROCESO
-    =========================== */
-    .process {
-      background: var(--black);
-      color: var(--white);
-    }
-    .process__header {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(3rem, 7vw, 8rem);
-      align-items: end;
-      margin-bottom: clamp(3rem, 6vh, 5rem);
-    }
-    .process__intro {
-      font-size: clamp(1rem, 1.5vw, 1.125rem);
-      line-height: 1.65;
-      color: rgba(255,255,255,0.45);
-      font-weight: 300;
-      align-self: end;
-    }
-    .steps {
-      display: flex;
-      flex-direction: column;
-    }
-    .step {
-      display: grid;
-      grid-template-columns: 60px 1fr auto;
-      gap: 2rem;
-      align-items: center;
-      padding: 2rem 0;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      transition: background 0.25s;
-    }
-    .step:first-child { border-top: 1px solid rgba(255,255,255,0.08); }
-    .step__num {
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      color: var(--accent);
-    }
-    .step__title {
-      font-size: clamp(1.1rem, 2vw, 1.5rem);
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: -0.01em;
-    }
-    .step__arrow {
-      width: 32px; height: 32px;
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.25s, border-color 0.25s;
-    }
-    .step:hover .step__arrow {
-      background: var(--accent);
-      border-color: var(--accent);
-    }
+    /* ── PROCESO ── */
+    .steps { margin-top: 3rem; border-top: 1px solid rgba(255,255,255,.1); }
+    .step { display: grid; grid-template-columns: 60px 1fr auto; gap: 2rem; align-items: center; padding: 2rem 0; border-bottom: 1px solid rgba(255,255,255,.08); transition: all .25s; }
+    .step:hover { padding-left: .75rem; }
+    .step__num { font-size: .75rem; font-weight: 700; letter-spacing: .18em; color: var(--accent); }
+    .step__title { font-size: clamp(1.1rem,2vw,1.5rem); font-weight: 900; text-transform: uppercase; letter-spacing: -.01em; }
+    .step__arrow { width: 36px; height: 36px; border: 1px solid rgba(255,255,255,.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all .25s var(--ease-back); }
+    .step:hover .step__arrow { background: var(--accent); border-color: var(--accent); transform: scale(1.15); }
     .step:hover .step__arrow svg { color: var(--black); }
-    .step__arrow svg { width: 14px; height: 14px; color: var(--white); transition: color 0.25s; }
+    .step__arrow svg { width: 14px; height: 14px; color: var(--white); transition: color .25s; }
 
-    /* ===========================
-       FORM / CONTACTO
-    =========================== */
-    .contact {
-      background: var(--white);
-    }
-    .contact__grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(3rem, 7vw, 8rem);
-      align-items: start;
-    }
-    .contact__left {}
-    .contact__tagline {
-      font-size: clamp(1.1rem, 2vw, 1.375rem);
-      font-weight: 300;
-      line-height: 1.6;
-      color: var(--gray);
-      margin-top: 1.5rem;
-    }
+    /* ── CONTACTO ── */
+    .contact__grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem,7vw,8rem); align-items: start; }
+    .contact__tagline { font-size: clamp(1.1rem,2vw,1.375rem); font-weight: 300; line-height: 1.6; color: var(--gray); margin-top: 1.5rem; }
     .contact__tagline strong { color: var(--black); font-weight: 700; }
-    .contact__socials {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-top: 3rem;
-    }
+    .contact__socials { display: flex; flex-direction: column; gap: 0; margin-top: 3rem; }
     .social-link {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 0.875rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--gray);
-      transition: color 0.2s;
-      padding-bottom: 1rem;
+      display: flex; align-items: center; gap: .75rem;
+      font-size: .875rem; font-weight: 600; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--gray);
+      transition: color .2s, padding-left .2s; padding: 1rem 0;
       border-bottom: 1px solid var(--gray-lt);
     }
     .social-link:last-child { border-bottom: none; }
-    .social-link:hover { color: var(--black); }
-    .social-link svg { width: 18px; height: 18px; }
+    .social-link:hover { color: var(--black); padding-left: .5rem; }
     .social-link span { flex: 1; }
-    .social-link .arrow {
-      font-size: 1.25rem;
-      transition: transform 0.25s;
-    }
+    .social-link .arrow { font-size: 1.25rem; transition: transform .25s; }
     .social-link:hover .arrow { transform: translateX(4px); }
-
-    .form {
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
+    .social-link svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .form { display: flex; flex-direction: column; gap: 1.25rem; }
+    .form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .form__field { display: flex; flex-direction: column; gap: .45rem; }
+    .form__field label { font-size: .6875rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; color: var(--gray); }
+    .form__field input,.form__field select,.form__field textarea {
+      font-family: var(--font); font-size: .9375rem; color: var(--black);
+      background: transparent; border: 1.5px solid var(--gray-lt);
+      border-radius: 4px; padding: .85rem 1rem; outline: none;
+      transition: border-color .25s; appearance: none;
     }
-    .form__row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-    .form__field {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    .form__field label {
-      font-size: 0.6875rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--gray);
-    }
-    .form__field input,
-    .form__field select,
-    .form__field textarea {
-      font-family: var(--font);
-      font-size: 0.9375rem;
-      font-weight: 400;
-      color: var(--black);
-      background: transparent;
-      border: 1.5px solid var(--gray-lt);
-      border-radius: 4px;
-      padding: 0.85rem 1rem;
-      outline: none;
-      transition: border-color 0.25s;
-      appearance: none;
-      -webkit-appearance: none;
-    }
-    .form__field input:focus,
-    .form__field select:focus,
-    .form__field textarea:focus {
-      border-color: var(--black);
-    }
-    .form__field textarea {
-      resize: vertical;
-      min-height: 130px;
-    }
+    .form__field input:focus,.form__field select:focus,.form__field textarea:focus { border-color: var(--black); }
+    .form__field textarea { resize: vertical; min-height: 110px; }
     .form__field select {
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 1rem center;
-      padding-right: 2.5rem;
+      background-repeat: no-repeat; background-position: right 1rem center; padding-right: 2.5rem;
     }
-    .form__submit {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-    .form__note {
-      font-size: 0.75rem;
-      color: var(--gray);
-      max-width: 30ch;
-      line-height: 1.5;
-    }
+    .form__submit { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .form__note { font-size: .75rem; color: var(--gray); max-width: 28ch; line-height: 1.5; }
 
-    /* ===========================
-       FOOTER
-    =========================== */
-    .footer {
-      background: var(--black);
-      color: var(--white);
-      padding: 3rem clamp(1.5rem, 5vw, 4rem);
-      border-top: 1px solid rgba(255,255,255,0.08);
-    }
-    .footer__inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
-    .footer__logo img { height: 28px; width: auto; filter: invert(1); }
-    .footer__logo-text {
-      font-size: 0.875rem;
-      font-weight: 900;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-    }
-    .footer__copy {
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.35);
-    }
-    .footer__links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
-    .footer__links a {
-      font-size: 0.75rem;
-      color: rgba(255,255,255,0.4);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      transition: color 0.2s;
-    }
+    /* ── FOOTER ── */
+    .footer { background: var(--black); color: var(--white); padding: 2.5rem clamp(1.5rem,5vw,4rem); border-top: 1px solid rgba(255,255,255,.06); }
+    .footer__inner { display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+    .footer__logo { font-size: 1.375rem; font-weight: 500; letter-spacing: -.01em; text-transform: lowercase; }
+    .footer__logo img { height: 26px; filter: invert(1); }
+    .footer__copy { font-size: .75rem; color: rgba(255,255,255,.3); }
+    .footer__links { display: flex; gap: 2rem; list-style: none; }
+    .footer__links a { font-size: .75rem; color: rgba(255,255,255,.35); letter-spacing: .08em; text-transform: uppercase; transition: color .2s; }
     .footer__links a:hover { color: var(--white); }
 
-    /* ===========================
-       MOBILE
-    =========================== */
-    @media (max-width: 900px) {
-      .nav__links, .nav__cta { display: none; }
-      .nav__hamburger { display: flex; }
-
-      .about__grid,
-      .services__header,
-      .contact__grid,
-      .process__header { grid-template-columns: 1fr; gap: 2rem; }
-
-      .services__grid { grid-template-columns: 1fr 1fr; }
-      .packages__grid { grid-template-columns: 1fr; }
-      .packages__grid--2 { grid-template-columns: 1fr; }
-      .dual-img { grid-template-columns: 1fr; }
-      .form__row { grid-template-columns: 1fr; }
-      .footer__inner { flex-direction: column; align-items: flex-start; }
-
-      .hero__bottom { flex-direction: column; align-items: flex-start; }
+    /* ── RESPONSIVE ── */
+    @media(max-width:900px){
+      .nav__links,.nav__cta{display:none}
+      .nav__hamburger{display:flex}
+      .about__grid,.contact__grid{grid-template-columns:1fr;gap:2rem}
+      .dual{grid-template-columns:1fr}
+      .form__row{grid-template-columns:1fr}
+      .hero__bottom{flex-direction:column;align-items:flex-start}
+      .footer__inner{flex-direction:column;align-items:flex-start}
+      .projects__header{flex-direction:column;align-items:flex-start}
+      .acc-body-inner{grid-template-columns:1fr;gap:1rem}
     }
-    @media (max-width: 600px) {
-      .services__grid { grid-template-columns: 1fr; }
-      .hero__actions { flex-direction: column; align-items: flex-start; }
-      .step { grid-template-columns: 40px 1fr auto; gap: 1rem; }
-      .cursor { display: none; }
+    @media(max-width:600px){
+      .hero__actions{flex-direction:column;align-items:flex-start}
+      .step{grid-template-columns:40px 1fr auto;gap:1rem}
     }
   </style>
 </head>
@@ -1173,46 +467,56 @@
   <!-- CURSOR -->
   <div class="cursor" id="cursor"></div>
 
+  <!-- FLOATING SYMBOLS -->
+  <div class="floaters" id="floaters" aria-hidden="true"></div>
+
   <!-- NAV -->
   <nav class="nav" id="nav">
-    <a href="#" class="nav__logo" aria-label="Gaucha inicio">
-      <img src="gauchasinfondo.png" alt="Gaucha" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
-      <span class="nav__logo-text" style="display:none">GAUCHA</span>
+    <a href="#" class="nav__logo">
+      <img src="gauchasinfondo.png" alt="gaucha" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />
+      <span style="display:none">gaucha</span>
     </a>
     <ul class="nav__links">
       <li><a href="#proyectos">Proyectos</a></li>
       <li><a href="#servicios">Servicios</a></li>
-      <li><a href="#paquetes">Paquetes</a></li>
+      <li><a href="#proceso">Proceso</a></li>
       <li><a href="#contacto">Contacto</a></li>
     </ul>
-    <a href="#contacto" class="nav__cta">Hablemos</a>
-    <button class="nav__hamburger" aria-label="Menú">
-      <span></span><span></span><span></span>
-    </button>
+    <a href="#contacto" class="nav__cta">Hablemos ↗</a>
+    <button class="nav__hamburger"><span></span><span></span><span></span></button>
   </nav>
 
 
-  <!-- ==================== HERO ==================== -->
-  <section class="hero">
-    <div class="hero__bg-word" aria-hidden="true">GAUCHA</div>
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero__grain"></div>
+    <div class="hero__symbol hero__symbol--tl">✦</div>
+    <div class="hero__symbol hero__symbol--br">◯</div>
 
-    <div class="hero__tag reveal">Buenos Aires · España</div>
+    <div class="hero__tag rv rv--up">Buenos Aires · España · 2024</div>
 
-    <h1 class="hero__headline reveal reveal-d1">
-      Tu marca<br /><em>tiene que</em><br />ser tuya.
+    <h1 class="hero__headline">
+      <span class="word"><span class="word-inner">Tu&nbsp;marca</span></span><br/>
+      <span class="word"><span class="word-inner"><em>tiene&nbsp;que</em></span></span><br/>
+      <span class="word"><span class="word-inner">tener</span></span><br/>
+      <span class="word"><span class="word-inner">carácter<span style="color:var(--accent)">.</span></span></span>
     </h1>
 
     <div class="hero__bottom">
-      <p class="hero__sub reveal reveal-d2">
-        Branding estratégico para negocios que no quieren parecer una más. Marcas con carácter, con onda y con criterio.
+      <p class="hero__sub rv rv--up d2">
+        No hacemos logos lindos al voleo. Hacemos marcas con estrategia, identidad y mundo propio para negocios que quieren plantarse distinto.
       </p>
-      <div class="hero__actions reveal reveal-d3">
+      <div class="hero__actions rv rv--up d3">
         <a href="#contacto" class="btn btn--accent">
-          Quiero mi marca
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Quiero mi marca ↗
         </a>
-        <a href="#proyectos" class="btn btn--outline-white">Ver proyectos</a>
+        <a href="#proyectos" class="btn btn--wh">Ver proyectos</a>
       </div>
+    </div>
+
+    <div class="hero__scroll-hint">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+      scroll
     </div>
   </section>
 
@@ -1220,64 +524,70 @@
   <!-- MARQUEE -->
   <div class="marquee" aria-hidden="true">
     <div class="marquee__track">
-      <span class="marquee__item">Branding estratégico<span class="marquee__dot"></span></span>
-      <span class="marquee__item">Identidad visual<span class="marquee__dot"></span></span>
-      <span class="marquee__item">Marcas con carácter<span class="marquee__dot"></span></span>
-      <span class="marquee__item">Packaging<span class="marquee__dot"></span></span>
-      <span class="marquee__item">UX/UI & Web<span class="marquee__dot"></span></span>
-      <span class="marquee__item">Redes sociales<span class="marquee__dot"></span></span>
-      <span class="marquee__item">Brandbook<span class="marquee__dot"></span></span>
-      <span class="marquee__item">Gastronomía · Lifestyle · Moda<span class="marquee__dot"></span></span>
-      <span class="marquee__item">Branding estratégico<span class="marquee__dot"></span></span>
-      <span class="marquee__item">Identidad visual<span class="marquee__dot"></span></span>
-      <span class="marquee__item">Marcas con carácter<span class="marquee__dot"></span></span>
-      <span class="marquee__item">Packaging<span class="marquee__dot"></span></span>
-      <span class="marquee__item">UX/UI & Web<span class="marquee__dot"></span></span>
-      <span class="marquee__item">Redes sociales<span class="marquee__dot"></span></span>
-      <span class="marquee__item">Brandbook<span class="marquee__dot"></span></span>
-      <span class="marquee__item">Gastronomía · Lifestyle · Moda<span class="marquee__dot"></span></span>
+      <span class="marquee__item">Branding estratégico <span class="marquee__sym">✦</span></span>
+      <span class="marquee__item">Identidad visual <span class="marquee__sym">☺</span></span>
+      <span class="marquee__item">Marcas con carácter <span class="marquee__sym">✸</span></span>
+      <span class="marquee__item">Packaging <span class="marquee__sym">◖</span></span>
+      <span class="marquee__item">UX/UI & Web <span class="marquee__sym">↗</span></span>
+      <span class="marquee__item">Redes sociales <span class="marquee__sym">◯</span></span>
+      <span class="marquee__item">Brandbook <span class="marquee__sym">✦</span></span>
+      <span class="marquee__item">Gastronomía · Lifestyle · Moda <span class="marquee__sym">☺</span></span>
+      <span class="marquee__item">Branding estratégico <span class="marquee__sym">✦</span></span>
+      <span class="marquee__item">Identidad visual <span class="marquee__sym">☺</span></span>
+      <span class="marquee__item">Marcas con carácter <span class="marquee__sym">✸</span></span>
+      <span class="marquee__item">Packaging <span class="marquee__sym">◖</span></span>
+      <span class="marquee__item">UX/UI & Web <span class="marquee__sym">↗</span></span>
+      <span class="marquee__item">Redes sociales <span class="marquee__sym">◯</span></span>
+      <span class="marquee__item">Brandbook <span class="marquee__sym">✦</span></span>
+      <span class="marquee__item">Gastronomía · Lifestyle · Moda <span class="marquee__sym">☺</span></span>
     </div>
   </div>
 
 
-  <!-- ==================== ABOUT ==================== -->
-  <section class="section about" aria-label="Sobre Gaucha">
+  <!-- ABOUT -->
+  <section class="section" id="sobre">
     <div class="about__grid">
-      <div class="about__left">
-        <div class="section-label reveal">Quiénes somos</div>
-        <h2 class="section-headline reveal reveal-d1">
-          No hacemos<br /><em>marcas correctas.</em><br />Hacemos marcas<br />con carácter.
+      <div>
+        <div class="sec-label rv rv--left">Quiénes somos</div>
+        <h2 class="headline rv rv--up d1">
+          No hacemos<br/><em>marcas correctas.</em><br/>Hacemos marcas<br/>con carácter.
         </h2>
-        <p class="about__body reveal reveal-d2">
-          Gaucha es una agencia de branding nacida en Argentina para marcas que quieren <strong>plantarse distinto</strong>. Trabajamos estrategia, identidad visual y sistemas de marca para emprendimientos, gastronómicos, locales y proyectos con proyección.
-          <br /><br />
-          Premium no tiene que ser frío. <strong>Cercano no tiene que ser amateur.</strong>
+        <p class="about__body rv rv--up d2">
+          Gaucha es una agencia de branding nacida en Argentina para marcas que quieren <strong>plantarse distinto</strong>. Trabajamos estrategia, identidad visual y sistemas completos para emprendedores, gastronómicos, locales y proyectos con proyección que se cansaron de parecerse a todos.
+          <br/><br/>
+          <strong>Premium no tiene que ser frío. Cercano no tiene que ser amateur.</strong>
         </p>
-        <div style="margin-top:2.5rem" class="reveal reveal-d3">
-          <a href="#servicios" class="btn btn--outline-black">Ver servicios</a>
+        <div class="about__badges rv rv--up d3">
+          <span class="badge"><span class="sym">✦</span> Buenos Aires</span>
+          <span class="badge"><span class="sym">☺</span> Argentina & España</span>
+          <span class="badge"><span class="sym">✸</span> Est. 2024</span>
+          <span class="badge"><span class="sym">↗</span> Branding premium</span>
+        </div>
+        <div style="margin-top:2.5rem" class="rv rv--up d4">
+          <a href="#servicios" class="btn btn--outline">Ver servicios ↗</a>
         </div>
       </div>
-      <div class="about__img reveal reveal-d2">
-        <img src="foto-estudio.jpg" alt="Estudio Gaucha" onerror="this.style.display='none'" />
-        <div class="about__img-placeholder">
+      <div class="about__img rv rv--right d2">
+        <img src="foto-estudio.jpg" alt="" onerror="this.style.display='none'" />
+        <div class="about__img-ph">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-          Tu foto acá
+          Tu foto de equipo o estudio
         </div>
       </div>
     </div>
   </section>
 
 
-  <!-- ==================== PROYECTOS ==================== -->
-  <section class="projects" id="proyectos" aria-label="Proyectos">
+  <!-- PROYECTOS -->
+  <section class="projects" id="proyectos">
     <div class="projects__header">
       <div>
-        <div class="section-label reveal" style="color:rgba(255,255,255,0.35)">Trabajo reciente</div>
-        <h2 class="section-headline projects__headline reveal reveal-d1">
-          Proyectos<br /><em>que nos</em><br />enorgullecen.
+        <div class="sec-label sec-label--w rv rv--left">Trabajo reciente</div>
+        <h2 class="headline rv rv--up d1" style="color:var(--white)">
+          Proyectos<br/><em>que nos</em><br/>enorgullecen<span style="color:var(--accent)">.</span>
         </h2>
       </div>
-      <div class="projects__nav reveal reveal-d2">
+      <div class="proj-nav rv rv--right d2">
         <button class="proj-nav-btn" id="prevBtn" aria-label="Anterior">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
         </button>
@@ -1286,393 +596,282 @@
         </button>
       </div>
     </div>
-
     <div class="carousel" id="carousel">
+      <div class="proj-card rv rv--up"><div class="proj-card__bg proj-card__bg--a"></div><div class="proj-card__grid"></div><img class="proj-card__img" src="proyecto-01.jpg" alt="" onerror="this.style.display='none'"/><div class="proj-card__ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Tu imagen acá</div><div class="proj-card__overlay"></div><span class="proj-card__badge">Concepto</span><div class="proj-card__content"><div class="proj-card__label">Gastronomía</div><h3 class="proj-card__title">Dirección visual exploratoria</h3><div class="proj-tags"><span class="proj-tag">Branding</span><span class="proj-tag">Identidad</span><span class="proj-tag">Packaging</span></div></div></div>
 
-      <div class="proj-card">
-        <div class="proj-card__bg proj-card__bg--a"></div>
-        <div class="proj-card__pattern"></div>
-        <img class="proj-card__img" src="proyecto-01.jpg" alt="" onerror="this.style.display='none'" />
-        <div class="proj-card__placeholder">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-          Tu imagen acá
-        </div>
-        <div class="proj-card__overlay"></div>
-        <span class="proj-card__badge">Concepto</span>
-        <div class="proj-card__content">
-          <div class="proj-card__label">Gastronomía</div>
-          <h3 class="proj-card__title">Dirección visual exploratoria</h3>
-          <div class="proj-card__tags">
-            <span class="proj-tag">Branding</span>
-            <span class="proj-tag">Identidad</span>
-            <span class="proj-tag">Packaging</span>
-          </div>
-        </div>
-      </div>
+      <div class="proj-card rv rv--up d1"><div class="proj-card__bg proj-card__bg--b"></div><div class="proj-card__grid"></div><img class="proj-card__img" src="proyecto-02.jpg" alt="" onerror="this.style.display='none'"/><div class="proj-card__ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Tu imagen acá</div><div class="proj-card__overlay"></div><span class="proj-card__badge">Real</span><div class="proj-card__content"><div class="proj-card__label">Lifestyle · Indumentaria</div><h3 class="proj-card__title">Sistema de identidad visual</h3><div class="proj-tags"><span class="proj-tag">Identidad</span><span class="proj-tag">Redes</span><span class="proj-tag">Brandbook</span></div></div></div>
 
-      <div class="proj-card">
-        <div class="proj-card__bg proj-card__bg--b"></div>
-        <div class="proj-card__pattern"></div>
-        <img class="proj-card__img" src="proyecto-02.jpg" alt="" onerror="this.style.display='none'" />
-        <div class="proj-card__placeholder">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-          Tu imagen acá
-        </div>
-        <div class="proj-card__overlay"></div>
-        <span class="proj-card__badge">Real</span>
-        <div class="proj-card__content">
-          <div class="proj-card__label">Lifestyle · Indumentaria</div>
-          <h3 class="proj-card__title">Sistema de identidad visual</h3>
-          <div class="proj-card__tags">
-            <span class="proj-tag">Identidad</span>
-            <span class="proj-tag">Redes</span>
-            <span class="proj-tag">Brandbook</span>
-          </div>
-        </div>
-      </div>
+      <div class="proj-card rv rv--up d2"><div class="proj-card__bg proj-card__bg--c"></div><div class="proj-card__grid"></div><img class="proj-card__img" src="proyecto-03.jpg" alt="" onerror="this.style.display='none'"/><div class="proj-card__ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Tu imagen acá</div><div class="proj-card__overlay"></div><span class="proj-card__badge">Concepto</span><div class="proj-card__content"><div class="proj-card__label">Belleza · Bienestar</div><h3 class="proj-card__title">Marca completa desde cero</h3><div class="proj-tags"><span class="proj-tag">Estrategia</span><span class="proj-tag">Visual</span><span class="proj-tag">Web</span></div></div></div>
 
-      <div class="proj-card">
-        <div class="proj-card__bg proj-card__bg--c"></div>
-        <div class="proj-card__pattern"></div>
-        <img class="proj-card__img" src="proyecto-03.jpg" alt="" onerror="this.style.display='none'" />
-        <div class="proj-card__placeholder">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-          Tu imagen acá
-        </div>
-        <div class="proj-card__overlay"></div>
-        <span class="proj-card__badge">Concepto</span>
-        <div class="proj-card__content">
-          <div class="proj-card__label">Belleza · Bienestar</div>
-          <h3 class="proj-card__title">Marca completa desde cero</h3>
-          <div class="proj-card__tags">
-            <span class="proj-tag">Estrategia</span>
-            <span class="proj-tag">Visual</span>
-            <span class="proj-tag">Web</span>
-          </div>
-        </div>
-      </div>
+      <div class="proj-card rv rv--up d3"><div class="proj-card__bg proj-card__bg--d"></div><div class="proj-card__grid"></div><img class="proj-card__img" src="proyecto-04.jpg" alt="" onerror="this.style.display='none'"/><div class="proj-card__ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Tu imagen acá</div><div class="proj-card__overlay"></div><span class="proj-card__badge">Real</span><div class="proj-card__content"><div class="proj-card__label">Cafetería · Restaurante</div><h3 class="proj-card__title">Identidad gastronómica completa</h3><div class="proj-tags"><span class="proj-tag">Branding Full</span><span class="proj-tag">Papelería</span><span class="proj-tag">Menú</span></div></div></div>
 
-      <div class="proj-card">
-        <div class="proj-card__bg proj-card__bg--d"></div>
-        <div class="proj-card__pattern"></div>
-        <img class="proj-card__img" src="proyecto-04.jpg" alt="" onerror="this.style.display='none'" />
-        <div class="proj-card__placeholder">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-          Tu imagen acá
-        </div>
-        <div class="proj-card__overlay"></div>
-        <span class="proj-card__badge">Real</span>
-        <div class="proj-card__content">
-          <div class="proj-card__label">Cafetería · Restaurante</div>
-          <h3 class="proj-card__title">Identidad gastronómica completa</h3>
-          <div class="proj-card__tags">
-            <span class="proj-tag">Branding Full</span>
-            <span class="proj-tag">Papelería</span>
-            <span class="proj-tag">Menú</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="proj-card">
-        <div class="proj-card__bg proj-card__bg--e"></div>
-        <div class="proj-card__pattern"></div>
-        <img class="proj-card__img" src="proyecto-05.jpg" alt="" onerror="this.style.display='none'" />
-        <div class="proj-card__placeholder">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-          Tu imagen acá
-        </div>
-        <div class="proj-card__overlay"></div>
-        <span class="proj-card__badge">Concepto</span>
-        <div class="proj-card__content">
-          <div class="proj-card__label">Moda · Accesorios</div>
-          <h3 class="proj-card__title">Relanzamiento de marca</h3>
-          <div class="proj-card__tags">
-            <span class="proj-tag">Rebranding</span>
-            <span class="proj-tag">Redes</span>
-            <span class="proj-tag">Packaging</span>
-          </div>
-        </div>
-      </div>
-
+      <div class="proj-card rv rv--up d4"><div class="proj-card__bg proj-card__bg--e"></div><div class="proj-card__grid"></div><img class="proj-card__img" src="proyecto-05.jpg" alt="" onerror="this.style.display='none'"/><div class="proj-card__ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Tu imagen acá</div><div class="proj-card__overlay"></div><span class="proj-card__badge">Concepto</span><div class="proj-card__content"><div class="proj-card__label">Moda · Accesorios</div><h3 class="proj-card__title">Relanzamiento de marca</h3><div class="proj-tags"><span class="proj-tag">Rebranding</span><span class="proj-tag">Redes</span><span class="proj-tag">Packaging</span></div></div></div>
     </div>
   </section>
 
 
-  <!-- IMAGEN FULL -->
+  <!-- FULL IMG -->
   <div class="fullimg">
     <div class="fullimg__inner">
-      <img src="foto-full.jpg" alt="Gaucha estudio" onerror="this.style.display='none'" />
-      <div class="fullimg__placeholder">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-        Imagen panorámica acá (foto de estudio / mockups / proceso)
-      </div>
+      <img src="foto-full.jpg" alt="" onerror="this.style.display='none'" />
+      <div class="fullimg__ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Foto panorámica — estudio, mockups o proceso</div>
       <div class="fullimg__overlay">
-        <p class="fullimg__quote">
-          "Si tu marca podría<br /><em>ser de cualquiera,</em><br />hay un problema."
-        </p>
+        <p class="fullimg__quote rv rv--scale">"Si tu marca podría<br/><em>ser de cualquiera,</em><br/>hay un problema."</p>
       </div>
     </div>
   </div>
 
 
-  <!-- ==================== SERVICIOS ==================== -->
-  <section class="section services" id="servicios" aria-label="Servicios">
-    <div class="services__header">
-      <div>
-        <div class="section-label reveal">Lo que hacemos</div>
-        <h2 class="section-headline reveal reveal-d1">
-          Servicios<br /><em>que suman.</em>
-        </h2>
-      </div>
-      <p class="services__intro reveal reveal-d2">
-        No son servicios sueltos. Son piezas de un mismo sistema. Podés arrancar por donde necesitás y construir de a poco, o salir con todo desde el día uno.
-      </p>
-    </div>
-
-    <div class="services__grid">
-      <div class="svc-card reveal">
-        <div class="svc-card__num">01</div>
-        <h3 class="svc-card__name">Branding estratégico</h3>
-        <p class="svc-card__desc">Posicionamiento, concepto creativo, personalidad y tono de voz. La base que hace que todo lo demás tenga sentido.</p>
-      </div>
-      <div class="svc-card reveal reveal-d1">
-        <div class="svc-card__num">02</div>
-        <h3 class="svc-card__name">Identidad visual</h3>
-        <p class="svc-card__desc">Logo, paleta, tipografías, recursos gráficos y estilo fotográfico. Un sistema visual con criterio y carácter propio.</p>
-      </div>
-      <div class="svc-card reveal reveal-d2">
-        <div class="svc-card__num">03</div>
-        <h3 class="svc-card__name">Brandbook</h3>
-        <p class="svc-card__desc">Tu marca documentada, ordenada y lista para usar en cualquier contexto por cualquier persona.</p>
-      </div>
-      <div class="svc-card reveal">
-        <div class="svc-card__num">04</div>
-        <h3 class="svc-card__name">Redes sociales</h3>
-        <p class="svc-card__desc">Dirección visual, templates, portadas y sistema de posteos. Tu feed con identidad, no solo con "contenido".</p>
-      </div>
-      <div class="svc-card reveal reveal-d1">
-        <div class="svc-card__num">05</div>
-        <h3 class="svc-card__name">Packaging & Papelería</h3>
-        <p class="svc-card__desc">Bolsas, cajas, etiquetas, tarjetas. Los detalles que hacen que tu marca se sienta real y completa.</p>
-      </div>
-      <div class="svc-card reveal reveal-d2">
-        <div class="svc-card__num">06</div>
-        <h3 class="svc-card__name">UX/UI & Web</h3>
-        <p class="svc-card__desc">Webs y landings que tienen identidad, convierten y se ven tan bien como el resto de tu marca.</p>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- DUAL IMAGES -->
-  <div class="dual-img">
-    <div class="dual-img__item">
-      <img src="proceso-01.jpg" alt="" onerror="this.style.display='none'" />
-      <div class="dual-img__placeholder">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-        Foto de proceso / mockup
-      </div>
-      <div class="dual-img__caption">
-        <h3>El proceso importa</h3>
-        <p>Estrategia antes que estética</p>
-      </div>
-    </div>
-    <div class="dual-img__item">
-      <img src="proceso-02.jpg" alt="" onerror="this.style.display='none'" />
-      <div class="dual-img__placeholder">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
-        Foto de entrega / detalle
-      </div>
-      <div class="dual-img__caption">
-        <h3>El resultado también</h3>
-        <p>Marcas que se recuerdan</p>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ==================== PAQUETES ==================== -->
-  <section class="section packages" id="paquetes" aria-label="Paquetes">
-    <div class="packages__header">
-      <div class="section-label reveal" style="justify-content:center">Elegí tu punto de entrada</div>
-      <h2 class="section-headline reveal reveal-d1" style="text-align:center">
-        Cinco formas<br /><em>de arrancar.</em>
-      </h2>
-      <p class="packages__sub reveal reveal-d2">
-        Cada paquete está diseñado para una etapa y una necesidad. Podés empezar por donde necesitás.
-      </p>
-    </div>
-
-    <div class="packages__grid">
-      <div class="pkg reveal">
-        <div class="pkg__tag">Paquete 01</div>
-        <h3 class="pkg__name">Marca Gaucha</h3>
-        <p class="pkg__desc">Para marcas que nacen o que se relanzan. El pack completo de identidad estratégica y visual.</p>
-        <ul class="pkg__list">
-          <li>Brief estratégico completo</li>
-          <li>Análisis de competencia</li>
-          <li>Posicionamiento y personalidad</li>
-          <li>Concepto creativo</li>
-          <li>Identidad visual completa</li>
-          <li>Logo, paleta, tipografías</li>
-          <li>Brandbook</li>
-        </ul>
-        <a href="#contacto" class="pkg__cta">Consultá precio</a>
-      </div>
-
-      <div class="pkg pkg--featured reveal reveal-d1">
-        <div class="pkg__badge">El más elegido</div>
-        <div class="pkg__tag">Paquete 02</div>
-        <h3 class="pkg__name">Marca Gaucha Full</h3>
-        <p class="pkg__desc">Para locales, gastronomía o marcas que necesitan salir completas y con todo listo.</p>
-        <ul class="pkg__list">
-          <li>Todo lo de Marca Gaucha</li>
-          <li>Papelería completa</li>
-          <li>Packaging básico</li>
-          <li>Templates para redes</li>
-          <li>Portadas y highlights</li>
-          <li>Piezas de lanzamiento</li>
-          <li>Guía de uso para redes</li>
-        </ul>
-        <a href="#contacto" class="pkg__cta">Quiero este</a>
-      </div>
-
-      <div class="pkg reveal reveal-d2">
-        <div class="pkg__tag">Paquete 03</div>
-        <h3 class="pkg__name">Gaucha Digital</h3>
-        <p class="pkg__desc">Para marcas que ya tienen identidad pero necesitan presencia digital a la altura.</p>
-        <ul class="pkg__list">
-          <li>Auditoría digital</li>
-          <li>Dirección visual Instagram</li>
-          <li>Templates editables</li>
-          <li>Sistema gráfico de posteos</li>
-          <li>Bio y perfil optimizado</li>
-          <li>Tono de comunicación</li>
-        </ul>
-        <a href="#contacto" class="pkg__cta">Consultá precio</a>
-      </div>
-    </div>
-
-    <div class="packages__grid--2" style="margin-top:1rem">
-      <div class="pkg reveal">
-        <div class="pkg__tag">Paquete 04</div>
-        <h3 class="pkg__name">Web Gaucha</h3>
-        <p class="pkg__desc">Para marcas que necesitan una web o landing con identidad real, no una plantilla genérica.</p>
-        <ul class="pkg__list">
-          <li>Estructura y arquitectura</li>
-          <li>UX/UI y diseño visual</li>
-          <li>Copy base</li>
-          <li>Prototipo en Figma</li>
-          <li>Responsive + desarrollo web</li>
-        </ul>
-        <a href="#contacto" class="pkg__cta">Consultá precio</a>
-      </div>
-      <div class="pkg reveal reveal-d1">
-        <div class="pkg__tag">Paquete 05</div>
-        <h3 class="pkg__name">Asesoría Gaucha</h3>
-        <p class="pkg__desc">¿No sabés por dónde empezar? Diagnosticamos tu marca y te damos un camino claro.</p>
-        <ul class="pkg__list">
-          <li>Diagnóstico completo</li>
-          <li>Revisión de Instagram y web</li>
-          <li>Problemas de identidad</li>
-          <li>Recomendaciones accionables</li>
-          <li>Hoja de ruta</li>
-        </ul>
-        <a href="#contacto" class="pkg__cta">Empezar por acá</a>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ==================== MANIFIESTO ==================== -->
-  <section class="manifesto">
-    <h2 class="manifesto__headline reveal">
-      Premium<br /><em>no tiene que</em><br />ser frío.
+  <!-- SERVICIOS -->
+  <section class="section" id="servicios">
+    <div class="sec-label rv rv--left">Lo que hacemos</div>
+    <h2 class="headline rv rv--up d1">
+      Servicios<br/><em>que suman.</em>
     </h2>
-    <p class="manifesto__body reveal reveal-d1">
-      Creemos que una marca no tiene que parecerse a todas para verse <strong>profesional</strong>. Creemos en las marcas con <strong>carácter</strong>, con intención y con una vuelta de rosca. <strong>Popular</strong> también puede ser fino. <strong>Cercano</strong> no tiene que ser amateur.
+    <p class="services__intro rv rv--up d2">
+      No son servicios sueltos — son piezas de un mismo sistema. Hacé click para ver qué incluye cada uno y pedilo directo.
     </p>
-    <a href="#contacto" class="btn btn--outline-black reveal reveal-d2">Hablemos de tu marca</a>
+
+    <div class="acc rv rv--up d3">
+
+      <div class="acc-item" id="acc1">
+        <div class="acc-header" onclick="toggleAcc('acc1')">
+          <span class="acc-num">01</span>
+          <span class="acc-title">Branding estratégico</span>
+          <span class="acc-sym">✦</span>
+        </div>
+        <div class="acc-body">
+          <div class="acc-body-inner">
+            <div>
+              <p class="acc-desc">La base de todo. Antes de diseñar una sola letra, ordenamos quién sos, a quién le hablás y cómo querés que te vean. Sin estrategia, el diseño es solo decoración.</p>
+              <ul class="acc-includes">
+                <li>Brief estratégico completo</li>
+                <li>Análisis de mercado y competencia</li>
+                <li>Posicionamiento y diferencial</li>
+                <li>Personalidad y tono de voz</li>
+                <li>Concepto creativo de marca</li>
+              </ul>
+            </div>
+            <div class="acc-cta">
+              <a href="#contacto" class="btn btn--accent">Quiero esto ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item" id="acc2">
+        <div class="acc-header" onclick="toggleAcc('acc2')">
+          <span class="acc-num">02</span>
+          <span class="acc-title">Identidad visual completa</span>
+          <span class="acc-sym">✦</span>
+        </div>
+        <div class="acc-body">
+          <div class="acc-body-inner">
+            <div>
+              <p class="acc-desc">El sistema visual que hace que tu marca se reconozca en cualquier lado. No un logo suelto — un mundo visual coherente, con criterio y con mucha onda.</p>
+              <ul class="acc-includes">
+                <li>Logo y variantes</li>
+                <li>Paleta de colores</li>
+                <li>Tipografías y jerarquía</li>
+                <li>Recursos gráficos y texturas</li>
+                <li>Estilo fotográfico</li>
+                <li>Brandbook completo</li>
+              </ul>
+            </div>
+            <div class="acc-cta">
+              <a href="#contacto" class="btn btn--accent">Quiero esto ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item" id="acc3">
+        <div class="acc-header" onclick="toggleAcc('acc3')">
+          <span class="acc-num">03</span>
+          <span class="acc-title">Redes sociales & contenido</span>
+          <span class="acc-sym">✦</span>
+        </div>
+        <div class="acc-body">
+          <div class="acc-body-inner">
+            <div>
+              <p class="acc-desc">Tu Instagram tiene que verse como tu marca, no como un catálogo genérico. Diseñamos el sistema visual para que cada posteo sea reconocible y tenga identidad propia.</p>
+              <ul class="acc-includes">
+                <li>Dirección visual de Instagram</li>
+                <li>Templates editables para stories y feed</li>
+                <li>Portadas y highlights</li>
+                <li>Sistema gráfico de posteos</li>
+                <li>Bio, perfil y tono de comunicación</li>
+                <li>Guía de uso y recomendaciones</li>
+              </ul>
+            </div>
+            <div class="acc-cta">
+              <a href="#contacto" class="btn btn--accent">Quiero esto ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item" id="acc4">
+        <div class="acc-header" onclick="toggleAcc('acc4')">
+          <span class="acc-num">04</span>
+          <span class="acc-title">Packaging & papelería</span>
+          <span class="acc-sym">✦</span>
+        </div>
+        <div class="acc-body">
+          <div class="acc-body-inner">
+            <div>
+              <p class="acc-desc">Los detalles físicos son los que hacen que tu marca se sienta real y completa. Desde la bolsa hasta la tarjeta, todo tiene que hablar el mismo idioma.</p>
+              <ul class="acc-includes">
+                <li>Diseño de packaging (bolsas, cajas, etiquetas)</li>
+                <li>Tarjetas personales y corporativas</li>
+                <li>Sobres y hojas membretadas</li>
+                <li>Señalética y materiales de local</li>
+                <li>Stickers y elementos de marca</li>
+              </ul>
+            </div>
+            <div class="acc-cta">
+              <a href="#contacto" class="btn btn--accent">Quiero esto ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item" id="acc5">
+        <div class="acc-header" onclick="toggleAcc('acc5')">
+          <span class="acc-num">05</span>
+          <span class="acc-title">UX/UI & Web</span>
+          <span class="acc-sym">✦</span>
+        </div>
+        <div class="acc-body">
+          <div class="acc-body-inner">
+            <div>
+              <p class="acc-desc">Webs y landings que tienen identidad, convierten y se ven tan bien como el resto de tu marca. No plantillas — diseño visual pensado para vos.</p>
+              <ul class="acc-includes">
+                <li>Arquitectura y estructura</li>
+                <li>UX/UI y diseño visual</li>
+                <li>Copy base</li>
+                <li>Prototipo en Figma</li>
+                <li>Adaptación responsive</li>
+                <li>Desarrollo web (opcional)</li>
+              </ul>
+            </div>
+            <div class="acc-cta">
+              <a href="#contacto" class="btn btn--accent">Quiero esto ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item" id="acc6">
+        <div class="acc-header" onclick="toggleAcc('acc6')">
+          <span class="acc-num">06</span>
+          <span class="acc-title">Asesoría de marca</span>
+          <span class="acc-sym">✦</span>
+        </div>
+        <div class="acc-body">
+          <div class="acc-body-inner">
+            <div>
+              <p class="acc-desc">¿No sabés por dónde empezar? ¿Sentís que algo no funciona pero no sabés qué? Diagnosticamos tu marca y te damos un camino claro y accionable para mejorarla.</p>
+              <ul class="acc-includes">
+                <li>Diagnóstico completo de marca</li>
+                <li>Revisión de Instagram y web</li>
+                <li>Identificación de problemas de identidad</li>
+                <li>Recomendaciones concretas y con prioridad</li>
+                <li>Hoja de ruta para mejorar</li>
+              </ul>
+            </div>
+            <div class="acc-cta">
+              <a href="#contacto" class="btn btn--accent">Quiero esto ↗</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </section>
 
 
-  <!-- ==================== PROCESO ==================== -->
-  <section class="section process" aria-label="Proceso">
-    <div class="process__header">
+  <!-- MANIFIESTO -->
+  <section class="section section--accent manifesto">
+    <div class="manifesto__bg-sym manifesto__bg-sym--tl" aria-hidden="true">☺</div>
+    <div class="manifesto__bg-sym manifesto__bg-sym--br" aria-hidden="true">✦</div>
+    <h2 class="manifesto__headline rv rv--up">
+      Premium<br/><em>no tiene que</em><br/>ser frío.
+    </h2>
+    <p class="manifesto__body rv rv--up d1">
+      Creemos que una marca no tiene que parecerse a todas para verse <strong>profesional</strong>. Creemos en las marcas con <strong>carácter</strong>, con intención y con una vuelta de rosca. <strong>Popular</strong> también puede ser fino. Trabajamos para negocios que saben que el diseño no es un gasto — es <strong>la diferencia</strong> entre ser una más o ser la que se recuerda.
+    </p>
+    <a href="#contacto" class="btn btn--bk rv rv--up d2">Hablemos de tu marca ↗</a>
+  </section>
+
+
+  <!-- DUAL IMG -->
+  <div class="dual">
+    <div class="dual__item rv rv--left">
+      <img src="proceso-01.jpg" alt="" onerror="this.style.display='none'" />
+      <div class="dual__ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Foto proceso / bocetos</div>
+      <div class="dual__cap"><h3>El proceso importa ✦</h3><p>Estrategia antes que estética</p></div>
+    </div>
+    <div class="dual__item rv rv--right">
+      <img src="proceso-02.jpg" alt="" onerror="this.style.display='none'" />
+      <div class="dual__ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>Foto entrega / detalle</div>
+      <div class="dual__cap"><h3>El resultado también ☺</h3><p>Marcas que se recuerdan</p></div>
+    </div>
+  </div>
+
+
+  <!-- PROCESO -->
+  <section class="section section--black" id="proceso">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(3rem,7vw,8rem);align-items:end;margin-bottom:3rem;flex-wrap:wrap" class="rv rv--up">
       <div>
-        <div class="section-label reveal" style="color:rgba(255,255,255,0.3)">Cómo trabajamos</div>
-        <h2 class="section-headline reveal reveal-d1" style="color:var(--white)">
-          Con onda,<br /><em>pero no</em><br />al voleo.
-        </h2>
+        <div class="sec-label sec-label--w">Cómo trabajamos</div>
+        <h2 class="headline rv rv--up d1" style="color:var(--white)">Con onda,<br/><em>pero no</em><br/>al voleo<span style="color:var(--accent)">.</span></h2>
       </div>
-      <p class="process__intro reveal reveal-d2">
-        Hay un proceso claro, una metodología y una mirada estratégica detrás de cada decisión estética. No diseñamos de voleo.
+      <p class="rv rv--up d2" style="font-size:clamp(1rem,1.5vw,1.125rem);font-weight:300;line-height:1.65;color:rgba(255,255,255,.4);align-self:end">
+        Hay un proceso claro, una metodología y una mirada estratégica detrás de cada decisión estética. No tiramos ideas y a ver qué pasa.
       </p>
     </div>
     <div class="steps">
-      <div class="step reveal">
-        <div class="step__num">01</div>
-        <div class="step__title">Escuchamos</div>
-        <div class="step__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-      </div>
-      <div class="step reveal">
-        <div class="step__num">02</div>
-        <div class="step__title">Ordenamos la estrategia</div>
-        <div class="step__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-      </div>
-      <div class="step reveal">
-        <div class="step__num">03</div>
-        <div class="step__title">Diseñamos la identidad</div>
-        <div class="step__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-      </div>
-      <div class="step reveal">
-        <div class="step__num">04</div>
-        <div class="step__title">Bajamos a piezas reales</div>
-        <div class="step__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-      </div>
-      <div class="step reveal">
-        <div class="step__num">05</div>
-        <div class="step__title">Entregamos y te soltamos</div>
-        <div class="step__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
-      </div>
+      <div class="step rv rv--up d1"><div class="step__num">01</div><div class="step__title">Te escuchamos ☺</div><div class="step__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div>
+      <div class="step rv rv--up d2"><div class="step__num">02</div><div class="step__title">Ordenamos la estrategia ✦</div><div class="step__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div>
+      <div class="step rv rv--up d3"><div class="step__num">03</div><div class="step__title">Diseñamos la identidad ✸</div><div class="step__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div>
+      <div class="step rv rv--up d4"><div class="step__num">04</div><div class="step__title">Bajamos a piezas reales ◖</div><div class="step__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div>
+      <div class="step rv rv--up d5"><div class="step__num">05</div><div class="step__title">Te entregamos y te soltamos ↗</div><div class="step__arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div></div>
     </div>
   </section>
 
 
-  <!-- ==================== CONTACTO / FORM ==================== -->
-  <section class="section contact" id="contacto" aria-label="Contacto">
+  <!-- CONTACTO -->
+  <section class="section" id="contacto">
     <div class="contact__grid">
-      <div class="contact__left">
-        <div class="section-label reveal">Hablemos</div>
-        <h2 class="section-headline reveal reveal-d1">
-          ¿Tu marca<br /><em>está lista</em><br />para dejar de<br />ser una más?
+      <div>
+        <div class="sec-label rv rv--left">Hablemos</div>
+        <h2 class="headline rv rv--up d1">
+          ¿Tu marca<br/><em>está lista</em><br/>para dejar<br/>de ser una más<span style="color:var(--accent)">?</span>
         </h2>
-        <p class="contact__tagline reveal reveal-d2">
-          Contanos tu proyecto y te respondemos en menos de 48hs con <strong>una propuesta honesta y con criterio.</strong>
+        <p class="contact__tagline rv rv--up d2">
+          Contanos tu proyecto y te respondemos en menos de 48hs con <strong>una propuesta honesta y con criterio</strong>. Sin vueltas.
         </p>
-        <div class="contact__socials reveal reveal-d3">
+        <div class="contact__socials rv rv--up d3">
           <a href="https://instagram.com/agenciagaucha" class="social-link" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/></svg>
-            <span>@agenciagaucha</span>
-            <span class="arrow">→</span>
+            <span>@agenciagaucha</span><span class="arrow">→</span>
           </a>
           <a href="mailto:hola@agenciagaucha.com" class="social-link">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            <span>hola@agenciagaucha.com</span>
-            <span class="arrow">→</span>
+            <span>hola@agenciagaucha.com</span><span class="arrow">→</span>
           </a>
           <a href="https://wa.me/5491100000000" class="social-link" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-            <span>WhatsApp</span>
-            <span class="arrow">→</span>
+            <span>WhatsApp</span><span class="arrow">→</span>
           </a>
         </div>
       </div>
 
-      <form class="form reveal reveal-d1" onsubmit="handleSubmit(event)">
+      <form class="form rv rv--right d1" onsubmit="handleSubmit(event)" novalidate>
         <div class="form__row">
           <div class="form__field">
-            <label for="nombre">Tu nombre</label>
+            <label for="nombre">Tu nombre ✦</label>
             <input type="text" id="nombre" name="nombre" placeholder="Juana García" required />
           </div>
           <div class="form__field">
@@ -1680,31 +879,51 @@
             <input type="email" id="email" name="email" placeholder="hola@tumarca.com" required />
           </div>
         </div>
-        <div class="form__field">
-          <label for="negocio">¿Cuál es tu negocio o proyecto?</label>
-          <input type="text" id="negocio" name="negocio" placeholder="Una cafetería que está por abrir en Palermo..." required />
+        <div class="form__row">
+          <div class="form__field">
+            <label for="negocio">Tu negocio o proyecto</label>
+            <input type="text" id="negocio" name="negocio" placeholder="Una cafetería en Palermo..." required />
+          </div>
+          <div class="form__field">
+            <label for="ig">IG de tu marca (si tenés)</label>
+            <input type="text" id="ig" name="ig" placeholder="@tumarca" />
+          </div>
+        </div>
+        <div class="form__row">
+          <div class="form__field">
+            <label for="estado">Estado de tu marca</label>
+            <select id="estado" name="estado">
+              <option value="">¿En qué etapa estás?</option>
+              <option value="inicio">Arrancando desde cero</option>
+              <option value="por-abrir">Negocio por abrir</option>
+              <option value="en-marcha">Ya en marcha, quiero mejorar</option>
+              <option value="relanzando">Relanzando la marca</option>
+              <option value="profesionalizar">Quiero profesionalizar lo que tengo</option>
+            </select>
+          </div>
+          <div class="form__field">
+            <label for="servicio">¿Qué necesitás?</label>
+            <select id="servicio" name="servicio">
+              <option value="">Elegí un servicio</option>
+              <option value="branding">Branding estratégico</option>
+              <option value="identidad">Identidad visual completa</option>
+              <option value="redes">Redes sociales</option>
+              <option value="packaging">Packaging & papelería</option>
+              <option value="web">UX/UI & Web</option>
+              <option value="asesoria">Asesoría de marca</option>
+              <option value="todo">Todo junto (pack completo)</option>
+              <option value="no-se">Todavía no sé, necesito orientación</option>
+            </select>
+          </div>
         </div>
         <div class="form__field">
-          <label for="servicio">¿Qué necesitás?</label>
-          <select id="servicio" name="servicio">
-            <option value="">Elegí un servicio</option>
-            <option value="marca-gaucha">Marca Gaucha (identidad completa)</option>
-            <option value="marca-full">Marca Gaucha Full (completo + piezas)</option>
-            <option value="digital">Gaucha Digital (presencia digital)</option>
-            <option value="web">Web Gaucha</option>
-            <option value="asesoria">Asesoría de marca</option>
-            <option value="no-se">Todavía no sé, necesito orientación</option>
-          </select>
-        </div>
-        <div class="form__field">
-          <label for="mensaje">Contanos más sobre tu proyecto</label>
-          <textarea id="mensaje" name="mensaje" placeholder="En qué etapa estás, qué tenés hasta ahora, qué querés lograr..."></textarea>
+          <label for="mensaje">Contanos más ☺</label>
+          <textarea id="mensaje" name="mensaje" placeholder="Contanos qué tenés hasta ahora, qué querés lograr y cualquier detalle que te parezca importante..."></textarea>
         </div>
         <div class="form__submit">
-          <p class="form__note">Te respondemos en menos de 48hs con ganas y con criterio.</p>
-          <button type="submit" class="btn btn--accent">
-            Enviar
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <p class="form__note">Te respondemos en menos de 48hs. Sin spam, sin vueltas.</p>
+          <button type="submit" class="btn btn--accent" id="submitBtn">
+            Enviar ↗
           </button>
         </div>
       </form>
@@ -1716,14 +935,14 @@
   <footer class="footer">
     <div class="footer__inner">
       <div class="footer__logo">
-        <img src="gauchasinfondo.png" alt="Gaucha" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'" />
-        <span class="footer__logo-text" style="display:none">GAUCHA</span>
+        <img src="gauchasinfondo.png" alt="gaucha" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />
+        <span style="display:none">gaucha</span>
       </div>
-      <p class="footer__copy">© 2024 Agencia Gaucha. Buenos Aires, Argentina.</p>
+      <p class="footer__copy">© 2024 Agencia Gaucha. Buenos Aires, Argentina. <span style="color:var(--accent)">✦</span></p>
       <ul class="footer__links">
         <li><a href="#proyectos">Proyectos</a></li>
         <li><a href="#servicios">Servicios</a></li>
-        <li><a href="#paquetes">Paquetes</a></li>
+        <li><a href="#proceso">Proceso</a></li>
         <li><a href="#contacto">Contacto</a></li>
       </ul>
     </div>
@@ -1731,70 +950,97 @@
 
 
   <script>
-    // ── Custom cursor ──
-    const cursor = document.getElementById('cursor');
-    let mx = -100, my = -100;
+    // ── CURSOR ──
+    const cur = document.getElementById('cursor');
     document.addEventListener('mousemove', e => {
-      mx = e.clientX; my = e.clientY;
-      cursor.style.left = mx + 'px';
-      cursor.style.top  = my + 'px';
+      cur.style.left = e.clientX + 'px';
+      cur.style.top  = e.clientY + 'px';
     });
-    document.addEventListener('mouseenter', () => cursor.classList.remove('cursor--hidden'));
-    document.addEventListener('mouseleave', () => cursor.classList.add('cursor--hidden'));
-
-    // Grow on interactive elements
-    const growEls = document.querySelectorAll('a, button, .svc-card, .proj-card, .pkg');
-    growEls.forEach(el => {
-      el.addEventListener('mouseenter', () => cursor.classList.add('cursor--grow'));
-      el.addEventListener('mouseleave', () => cursor.classList.remove('cursor--grow'));
+    document.addEventListener('mouseleave', () => cur.classList.add('hidden'));
+    document.addEventListener('mouseenter', () => cur.classList.remove('hidden'));
+    document.querySelectorAll('a,button,.acc-header,.proj-card,.svc-card').forEach(el => {
+      el.addEventListener('mouseenter', () => cur.classList.add('grow'));
+      el.addEventListener('mouseleave', () => cur.classList.remove('grow'));
     });
 
-    // ── Scroll reveal ──
-    const reveals = document.querySelectorAll('.reveal');
-    const revealObs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-    reveals.forEach(el => revealObs.observe(el));
+    // ── FLOATING SYMBOLS ──
+    const syms = ['✦','☺','✸','◖','◯','↗'];
+    const floaters = document.getElementById('floaters');
+    function spawnFloater() {
+      const el = document.createElement('span');
+      el.className = 'floater';
+      el.textContent = syms[Math.floor(Math.random()*syms.length)];
+      el.style.left = Math.random()*100 + 'vw';
+      el.style.bottom = '-2rem';
+      el.style.animationDuration = (10 + Math.random()*8) + 's';
+      el.style.animationDelay = (Math.random()*4) + 's';
+      el.style.fontSize = (.8 + Math.random()*.8) + 'rem';
+      floaters.appendChild(el);
+      setTimeout(() => el.remove(), 20000);
+    }
+    setInterval(spawnFloater, 2500);
+    setTimeout(spawnFloater, 500);
 
-    // ── Nav scroll ──
+    // ── NAV SCROLL ──
     const nav = document.getElementById('nav');
-    window.addEventListener('scroll', () => {
-      nav.classList.toggle('scrolled', window.scrollY > 60);
-    }, { passive: true });
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 60), {passive:true});
 
-    // ── Hero reveals on load ──
+    // ── HERO WORD REVEAL ──
     window.addEventListener('load', () => {
       setTimeout(() => {
-        document.querySelectorAll('.hero .reveal').forEach(el => el.classList.add('visible'));
-      }, 150);
+        document.querySelectorAll('.word-inner').forEach((el, i) => {
+          setTimeout(() => el.classList.add('in'), i * 120);
+        });
+        document.querySelectorAll('.hero .rv').forEach(el => {
+          setTimeout(() => el.classList.add('in'), 600);
+        });
+      }, 100);
     });
 
-    // ── Carousel buttons ──
+    // ── SCROLL REVEAL ──
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.rv:not(.hero .rv)').forEach(el => obs.observe(el));
+
+    // ── PARALLAX HERO SYMBOLS ──
+    const symTL = document.querySelector('.hero__symbol--tl');
+    const symBR = document.querySelector('.hero__symbol--br');
+    window.addEventListener('scroll', () => {
+      const y = scrollY * 0.3;
+      if (symTL) symTL.style.transform = `translateY(${y}px)`;
+      if (symBR) symBR.style.transform = `translateY(${-y*.5}px)`;
+    }, {passive:true});
+
+    // ── ACCORDION ──
+    function toggleAcc(id) {
+      const item = document.getElementById(id);
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.acc-item').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+    }
+
+    // ── CAROUSEL ──
     const carousel = document.getElementById('carousel');
-    const cardWidth = () => carousel.querySelector('.proj-card').offsetWidth + 20;
-    document.getElementById('nextBtn').addEventListener('click', () => {
-      carousel.scrollBy({ left: cardWidth(), behavior: 'smooth' });
-    });
-    document.getElementById('prevBtn').addEventListener('click', () => {
-      carousel.scrollBy({ left: -cardWidth(), behavior: 'smooth' });
-    });
+    const cw = () => (carousel.querySelector('.proj-card')?.offsetWidth || 300) + 20;
+    document.getElementById('nextBtn').addEventListener('click', () => carousel.scrollBy({left: cw(), behavior:'smooth'}));
+    document.getElementById('prevBtn').addEventListener('click', () => carousel.scrollBy({left: -cw(), behavior:'smooth'}));
 
-    // ── Form submit ──
+    // ── FORM ──
     function handleSubmit(e) {
       e.preventDefault();
-      const btn = e.target.querySelector('[type=submit]');
-      btn.textContent = '¡Enviado! ✓';
+      const btn = document.getElementById('submitBtn');
+      btn.innerHTML = '¡Enviado! ☺';
       btn.style.background = '#0D0D0D';
       btn.style.color = '#eaf261';
       setTimeout(() => {
-        btn.innerHTML = 'Enviar <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+        btn.innerHTML = 'Enviar ↗';
         btn.style.background = '';
         btn.style.color = '';
-      }, 3000);
+      }, 3500);
     }
   </script>
-
 </body>
 </html>
