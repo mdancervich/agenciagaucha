@@ -49,16 +49,17 @@
     }
     .floater {
       position: absolute;
-      font-size: clamp(1rem, 2vw, 1.5rem);
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
       color: var(--accent);
       opacity: 0;
       animation: floatUp 12s linear infinite;
       user-select: none;
+      text-shadow: 0 0 20px rgba(234,242,97,0.4);
     }
     @keyframes floatUp {
       0%   { opacity: 0; transform: translateY(0) rotate(0deg); }
-      10%  { opacity: 0.6; }
-      90%  { opacity: 0.3; }
+      10%  { opacity: 0.85; }
+      80%  { opacity: 0.65; }
       100% { opacity: 0; transform: translateY(-100vh) rotate(360deg); }
     }
 
@@ -81,7 +82,7 @@
       letter-spacing: -0.01em; text-transform: lowercase;
       color: var(--white); transition: color .3s;
     }
-    .nav__logo img { height: 30px; width: auto; filter: invert(1); transition: filter .3s; }
+    .nav__logo img { height: 52px; width: auto; filter: invert(1); transition: filter .3s; }
     .nav__logo img.loaded { filter: invert(1); }
     .nav.scrolled .nav__logo { color: var(--black); }
     .nav.scrolled .nav__logo img { filter: invert(0); }
@@ -141,7 +142,7 @@
     }
     .hero__tag::before { content: ''; display: block; width: 28px; height: 1px; background: var(--accent); }
     .hero__headline {
-      font-size: clamp(3rem,11vw,11rem); font-weight: 900;
+      font-size: clamp(2.5rem,8vw,8rem); font-weight: 900;
       line-height: .9; letter-spacing: -.03em; text-transform: uppercase;
       margin-bottom: clamp(2rem,4vh,3.5rem);
       position: relative; z-index: 1;
@@ -218,7 +219,7 @@
     .sec-label--b { color: rgba(0,0,0,.4); }
     .sec-label::after { content: ''; display: block; width: 24px; height: 1px; background: currentColor; }
     .headline {
-      font-size: clamp(2.5rem,6vw,5.5rem); font-weight: 900;
+      font-size: clamp(2rem,4.5vw,4rem); font-weight: 900;
       line-height: .95; letter-spacing: -.03em; text-transform: uppercase;
     }
     .headline em { font-style: italic; font-weight: 300; }
@@ -237,7 +238,7 @@
 
     /* ── ABOUT ── */
     .about__grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(3rem,7vw,8rem); align-items: center; }
-    .about__body { font-size: clamp(1.1rem,2vw,1.4rem); font-weight: 300; line-height: 1.6; margin-top: 2rem; }
+    .about__body { font-size: clamp(0.9rem,1.4vw,1.1rem); font-weight: 300; line-height: 1.6; margin-top: 2rem; }
     .about__body strong { font-weight: 700; }
     .about__img { aspect-ratio: 4/5; background: #111; border-radius: 6px; overflow: hidden; position: relative; }
     .about__img img { width:100%; height:100%; object-fit:cover; }
@@ -335,7 +336,7 @@
     }
     .acc-header:hover { color: var(--gray); }
     .acc-num { font-size: .75rem; font-weight: 700; letter-spacing: .18em; color: var(--accent); min-width: 2rem; }
-    .acc-title { font-size: clamp(1.25rem,2.5vw,2rem); font-weight: 900; letter-spacing: -.02em; text-transform: uppercase; flex: 1; }
+    .acc-title { font-size: clamp(1.1rem,1.8vw,1.5rem); font-weight: 900; letter-spacing: -.02em; text-transform: uppercase; flex: 1; }
     .acc-sym { font-size: 1.25rem; color: var(--gray); transition: transform .4s var(--ease), color .2s; }
     .acc-item.open .acc-sym { transform: rotate(45deg); color: var(--accent); }
     .acc-body {
@@ -370,9 +371,9 @@
     }
     .manifesto__bg-sym--tl { top: -0.1em; left: -0.05em; }
     .manifesto__bg-sym--br { bottom: -0.1em; right: -0.05em; }
-    .manifesto__headline { font-size: clamp(2.5rem,7vw,7rem); font-weight: 900; line-height: .95; letter-spacing: -.03em; text-transform: uppercase; margin-bottom: 2.5rem; position: relative; }
+    .manifesto__headline { font-size: clamp(2rem,5vw,5rem); font-weight: 900; line-height: .95; letter-spacing: -.03em; text-transform: uppercase; margin-bottom: 2.5rem; position: relative; }
     .manifesto__headline em { font-style: italic; font-weight: 300; }
-    .manifesto__body { font-size: clamp(1.1rem,2vw,1.375rem); line-height: 1.7; max-width: 60ch; margin: 0 auto 3rem; font-weight: 300; position: relative; }
+    .manifesto__body { font-size: clamp(0.9rem,1.4vw,1.1rem); line-height: 1.7; max-width: 60ch; margin: 0 auto 3rem; font-weight: 300; position: relative; }
     .manifesto__body strong { font-weight: 700; }
 
     /* ── DUAL IMG ── */
@@ -391,7 +392,7 @@
     .step { display: grid; grid-template-columns: 60px 1fr auto; gap: 2rem; align-items: center; padding: 2rem 0; border-bottom: 1px solid rgba(255,255,255,.08); transition: all .25s; }
     .step:hover { padding-left: .75rem; }
     .step__num { font-size: .75rem; font-weight: 700; letter-spacing: .18em; color: var(--accent); }
-    .step__title { font-size: clamp(1.1rem,2vw,1.5rem); font-weight: 900; text-transform: uppercase; letter-spacing: -.01em; }
+    .step__title { font-size: clamp(1rem,1.5vw,1.25rem); font-weight: 900; text-transform: uppercase; letter-spacing: -.01em; }
     .step__arrow { width: 36px; height: 36px; border: 1px solid rgba(255,255,255,.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all .25s var(--ease-back); }
     .step:hover .step__arrow { background: var(--accent); border-color: var(--accent); transform: scale(1.15); }
     .step:hover .step__arrow svg { color: var(--black); }
@@ -493,7 +494,7 @@
     <div class="hero__symbol hero__symbol--tl">✦</div>
     <div class="hero__symbol hero__symbol--br">◯</div>
 
-    <div class="hero__tag rv rv--up">Buenos Aires · España · 2024</div>
+    <div class="hero__tag rv rv--up">¿De qué país sos? Llegamos a todos, pero distinto.</div>
 
     <h1 class="hero__headline">
       <span class="word"><span class="word-inner">Tu&nbsp;marca</span></span><br/>
@@ -637,19 +638,25 @@
       <div class="acc-item" id="acc1">
         <div class="acc-header" onclick="toggleAcc('acc1')">
           <span class="acc-num">01</span>
-          <span class="acc-title">Branding estratégico</span>
+          <span class="acc-title">Branding estratégico + identidad visual</span>
           <span class="acc-sym">✦</span>
         </div>
         <div class="acc-body">
           <div class="acc-body-inner">
             <div>
-              <p class="acc-desc">La base de todo. Antes de diseñar una sola letra, ordenamos quién sos, a quién le hablás y cómo querés que te vean. Sin estrategia, el diseño es solo decoración.</p>
+              <p class="acc-desc">La base de todo, más el sistema visual completo. Ordenamos quién sos, a quién le hablás y cómo querés que te vean — y después lo traducimos en una identidad visual con criterio, carácter y mundo propio.</p>
               <ul class="acc-includes">
                 <li>Brief estratégico completo</li>
                 <li>Análisis de mercado y competencia</li>
                 <li>Posicionamiento y diferencial</li>
                 <li>Personalidad y tono de voz</li>
                 <li>Concepto creativo de marca</li>
+                <li>Logo y variantes</li>
+                <li>Paleta de colores</li>
+                <li>Tipografías y jerarquía</li>
+                <li>Recursos gráficos y texturas</li>
+                <li>Estilo fotográfico</li>
+                <li>Brandbook completo</li>
               </ul>
             </div>
             <div class="acc-cta">
